@@ -1,23 +1,30 @@
 package com.veichle.app.entity;
 
-import com.veichle.app.enums.VeichleStatus;
+import com.veichle.app.enums.VehicleStatus;
 import com.veichle.app.enums.VehicleType;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.persistence.*;
 
-
-@Data
+@Setter
+@Getter
 @Entity
 @Table
 public class Vehicle extends BaseEntity {
 
+    @Column(nullable = false,unique = true)
     private String number;
-    private double lat;
-    private double lng;
+    @Column
+    private double latitude;
+    @Column
+    private double longitude;
+    @Column
     private boolean active;
+    @Column
     private VehicleType vehicleType;
-    private VeichleStatus veichleStatus;
+    @Column
+    private VehicleStatus vehicleStatus;
     @OneToOne(cascade = CascadeType.ALL)
     private Device device;
 }

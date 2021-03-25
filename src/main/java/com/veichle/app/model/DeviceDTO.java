@@ -3,7 +3,8 @@ package com.veichle.app.model;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.veichle.app.entity.Device;
 import com.veichle.app.enums.DeviceType;
-import com.veichle.app.enums.Operator;
+import com.veichle.app.enums.SimOperator;
+import com.veichle.app.utils.DateTimeUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,37 +16,48 @@ import lombok.ToString;
 public class DeviceDTO{
 
     private Long id;
+    private String imei;
+    private String simOperator;
+    private String deviceType;
+    private String simNumber;
+    private boolean active;
+    private boolean assigned;
     private String createdBy;
     private String modifiedBy;
     private String added;
     private String updated;
-    private String imei;
-    private String simNumber;
-    private String operator;
-    private String deviceType;
-    private boolean active;
 
     public static DeviceDTO convertToDTO(Device device){
         DeviceDTO deviceDTO=new DeviceDTO();
         deviceDTO.setId(device.getId());
+        deviceDTO.setImei(device.getImei());
+        deviceDTO.setSimOperator(device.getSimOperator().name());
+        deviceDTO.setDeviceType(device.getDeviceType().name());
+        deviceDTO.setSimNumber(device.getSimNumber());
+        deviceDTO.setActive(device.isActive());
         deviceDTO.setCreatedBy(device.getCreatedBy());
         deviceDTO.setModifiedBy(device.getModifiedBy());
-        deviceDTO.setImei(device.getImei());
-        deviceDTO.setSimNumber(device.getSimNumber());
-        deviceDTO.setOperator(device.getOperator().name());
-        deviceDTO.setDeviceType(device.getDeviceType().name());
-        deviceDTO.setActive(device.isActive());
+        deviceDTO.setAdded(DateTimeUtils.convertToString(device.getAdded()));
+        deviceDTO.setUpdated(DateTimeUtils.convertToString(device.getUpdated()));
         return deviceDTO;
     }
 
     public static Device convertToDevice(DeviceDTO deviceDTO) {
         Device device=new Device();
-        device.setId(deviceDTO.getId());
         device.setImei(deviceDTO.getImei());
         device.setSimNumber(deviceDTO.getSimNumber());
-        device.setOperator(Enum.valueOf(Operator.class,deviceDTO.getOperator()));
+        device.setSimOperator(Enum.valueOf(SimOperator.class,deviceDTO.getSimOperator()));
         device.setDeviceType(Enum.valueOf(DeviceType.class,deviceDTO.getDeviceType()));
         device.setActive(deviceDTO.isActive());
         return device;
+    }
+
+    public static void convertToExistingDevice(Device existingDevice, DeviceDTO deviceDTO) {
+        existingDevice.setImei(deviceDTO.getImei());
+        existingDevice.setSimNumber(deviceDTO.getSimNumber());
+        existingDevice.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
+        existingDevice.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
+        existingDevice.setActive(deviceDTO.isActive());
+        existingDevice.setAssigned(deviceDTO.isAssigned());
     }
 }

@@ -2,7 +2,7 @@ package com.veichle.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.veichle.app.entity.Device;
-import com.veichle.app.enums.VeichleStatus;
+import com.veichle.app.enums.VehicleStatus;
 import com.veichle.app.enums.VehicleType;
 import lombok.Data;
 
@@ -22,6 +22,6 @@ public class VehicleDTO {
     private double lng;
     private boolean active;
     private VehicleType vehicleType;
-    private VeichleStatus veichleStatus;
+    private VehicleStatus veichleStatus;
     private Device device;
 }

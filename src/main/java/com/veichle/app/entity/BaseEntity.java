@@ -32,5 +32,4 @@ public class BaseEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "updated", columnDefinition = "DATETIME")
     protected Date updated;
-
 }

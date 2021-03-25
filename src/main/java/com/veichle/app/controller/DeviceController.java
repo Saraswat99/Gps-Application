@@ -1,8 +1,10 @@
 package com.veichle.app.controller;
 
 import com.veichle.app.entity.Device;
+import com.veichle.app.model.ApiResponse;
 import com.veichle.app.model.DeviceDTO;
 import com.veichle.app.service.DeviceService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -11,41 +13,39 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@RestController
+
 @Slf4j
+@Data
 @RequestMapping(value = "/devices")
+@RestController
 public class DeviceController {
 
     @Autowired
     private DeviceService deviceService;
 
     @GetMapping(value = "/list")
-    public List<DeviceDTO> getDeviceList(Authentication authentication){
-        String username=authentication.getName();
+    public List<DeviceDTO> getAllDevices(Authentication authentication){
+        String username = authentication.getName();
         log.info("User ==>> {}",username);
-        List<Device> deviceList=deviceService.getDeviceList(username);
+        List<Device> deviceList = deviceService.findAll(username);
         return deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList());
     }
 
-    @PostMapping(value="/save")
-    public DeviceDTO save(@RequestBody DeviceDTO deviceDTO){
+    @PostMapping("/save")
+    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO){
         log.info(deviceDTO.toString());
-        Device deviceSaved=deviceService.save(deviceDTO);
-        return DeviceDTO.convertToDTO(deviceSaved);
+        return deviceService.save(deviceDTO);
     }
 
     @PutMapping(value="/update")
     public DeviceDTO update(@RequestBody DeviceDTO deviceDTO) {
         log.info(deviceDTO.toString());
-        Device device=DeviceDTO.convertToDevice(deviceDTO);
-        Device deviceUpdated=deviceService.update(device);
-        return DeviceDTO.convertToDTO(deviceUpdated);
+        return deviceService.update(deviceDTO);
     }
 
-    @DeleteMapping(value="/delete/{id}")
-    public void delete(@PathVariable long id ){
-        deviceService.delete(id);
+    @RequestMapping(method= RequestMethod.DELETE, value = "/{id}")
+    public ApiResponse<String> deleteDevice(@PathVariable Long id){
+        deviceService.deleteById(id);
+        return new ApiResponse<>("Employee deleted");
     }
-
-
 }

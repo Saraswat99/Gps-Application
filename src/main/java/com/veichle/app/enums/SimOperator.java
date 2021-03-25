@@ -1,5 +1,5 @@
 package com.veichle.app.enums;
 
-public enum Operator {
+public enum SimOperator {
     AIRTEL, VODAFONE, JIO;
 }
