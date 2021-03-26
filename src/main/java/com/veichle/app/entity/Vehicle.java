@@ -4,9 +4,10 @@ import com.veichle.app.enums.VehicleStatus;
 import com.veichle.app.enums.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
-
+import lombok.ToString;
 import javax.persistence.*;
 
+@ToString
 @Setter
 @Getter
 @Entity
@@ -16,9 +17,9 @@ public class Vehicle extends BaseEntity {
     @Column(nullable = false,unique = true)
     private String number;
     @Column
-    private double latitude;
+    private double lat;
     @Column
-    private double longitude;
+    private double lng;
     @Column
     private boolean active;
     @Column

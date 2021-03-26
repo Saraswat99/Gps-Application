@@ -18,6 +18,7 @@ public class ControllerAdvice {
     @ExceptionHandler(RuntimeException.class)
     public ApiResponse<?> handleRuntimeException(HttpServletRequest request, HttpServletResponse response, RuntimeException exception){
         log.info(exception.getMessage());
+        exception.printStackTrace();
         return new ApiResponse<>(HttpStatus.NOT_ACCEPTABLE,exception.getMessage());
     }
 }

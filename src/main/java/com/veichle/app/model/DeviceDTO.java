@@ -46,8 +46,8 @@ public class DeviceDTO{
         Device device=new Device();
         device.setImei(deviceDTO.getImei());
         device.setSimNumber(deviceDTO.getSimNumber());
-        device.setSimOperator(Enum.valueOf(SimOperator.class,deviceDTO.getSimOperator()));
-        device.setDeviceType(Enum.valueOf(DeviceType.class,deviceDTO.getDeviceType()));
+        device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
+        device.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
         device.setActive(deviceDTO.isActive());
         return device;
     }
