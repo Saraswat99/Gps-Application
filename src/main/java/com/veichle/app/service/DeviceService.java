@@ -7,7 +7,6 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +30,6 @@ public class DeviceService {
         return DeviceDTO.convertToDTO(device);
     }
 
-    //delete device
-    public void deleteById(Long id) {
-        deviceRepository.deleteById(id);
-    }
-
     //update device
     public DeviceDTO update(DeviceDTO deviceDTO) {
         Long id=deviceDTO.getId();
@@ -52,6 +46,16 @@ public class DeviceService {
             existingDevice=deviceRepository.save(existingDevice);
             return DeviceDTO.convertToDTO(existingDevice);
         }
-        throw new RuntimeException("Employee not found");
+        throw new RuntimeException("Device not found");
+    }
+
+    //delete device
+    public void deleteById(Long id) {
+        Device device = deviceRepository.findById(id).get();
+        if(device.isAssigned()) {
+            throw new RuntimeException("Already Assigned !");
+        }else {
+            deviceRepository.deleteById(id);
+        }
     }
 }

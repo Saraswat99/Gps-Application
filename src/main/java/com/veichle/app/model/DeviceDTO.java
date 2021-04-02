@@ -35,6 +35,7 @@ public class DeviceDTO{
         deviceDTO.setDeviceType(device.getDeviceType().name());
         deviceDTO.setSimNumber(device.getSimNumber());
         deviceDTO.setActive(device.isActive());
+        deviceDTO.setAssigned(device.isAssigned());
         deviceDTO.setCreatedBy(device.getCreatedBy());
         deviceDTO.setModifiedBy(device.getModifiedBy());
         deviceDTO.setAdded(DateTimeUtils.convertToString(device.getAdded()));
@@ -48,7 +49,6 @@ public class DeviceDTO{
         device.setSimNumber(deviceDTO.getSimNumber());
         device.setSimOperator(Enum.valueOf(SimOperator.class,deviceDTO.getSimOperator()));
         device.setDeviceType(Enum.valueOf(DeviceType.class,deviceDTO.getDeviceType()));
-        device.setActive(deviceDTO.isActive());
         return device;
     }
 
@@ -58,6 +58,5 @@ public class DeviceDTO{
         existingDevice.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
         existingDevice.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
         existingDevice.setActive(deviceDTO.isActive());
-        existingDevice.setAssigned(deviceDTO.isAssigned());
     }
 }

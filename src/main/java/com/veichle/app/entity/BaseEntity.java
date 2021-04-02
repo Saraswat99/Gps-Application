@@ -26,10 +26,10 @@ public class BaseEntity {
     protected String modifiedBy;
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "added", columnDefinition = "DATETIME")
+    @Column(name = "added", columnDefinition = "DATETIME",nullable = false, updatable = false)
     protected Date added;
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", columnDefinition = "DATETIME")
+    @Column(name = "updated", columnDefinition = "DATETIME",nullable = false)
     protected Date updated;
 }

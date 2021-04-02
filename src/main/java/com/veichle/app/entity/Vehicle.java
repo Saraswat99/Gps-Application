@@ -4,6 +4,8 @@ import com.veichle.app.enums.VehicleStatus;
 import com.veichle.app.enums.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
 
 import javax.persistence.*;
 
@@ -25,6 +27,9 @@ public class Vehicle extends BaseEntity {
     private VehicleType vehicleType;
     @Column
     private VehicleStatus vehicleStatus;
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     private Device device;
+    @ManyToOne
+    @JoinColumn(name = "userId")
+    private User user;
 }

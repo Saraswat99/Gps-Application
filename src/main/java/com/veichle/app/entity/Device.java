@@ -18,9 +18,9 @@ public class Device extends BaseEntity {
     private String imei;
     @Column(nullable=false,unique = true)
     private String simNumber;
-    @Column(nullable=false)
+    @Column(nullable = false,name = "active", columnDefinition = "boolean default false")
     private boolean active;
-    @Column(nullable = false)
+    @Column(nullable = false,name = "assigned", columnDefinition = "boolean default false")
     private boolean assigned;
     @Column(nullable=false)
     private SimOperator simOperator;

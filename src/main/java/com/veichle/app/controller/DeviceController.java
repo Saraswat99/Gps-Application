@@ -38,14 +38,14 @@ public class DeviceController {
     }
 
     @PutMapping(value="/update")
-    public DeviceDTO update(@RequestBody DeviceDTO deviceDTO) {
+    public ApiResponse<DeviceDTO> update(@RequestBody DeviceDTO deviceDTO) {
         log.info(deviceDTO.toString());
-        return deviceService.update(deviceDTO);
+        return new ApiResponse(deviceService.update(deviceDTO));
     }
 
     @RequestMapping(method= RequestMethod.DELETE, value = "/{id}")
     public ApiResponse<String> deleteDevice(@PathVariable Long id){
         deviceService.deleteById(id);
-        return new ApiResponse<>("Employee deleted");
+        return new ApiResponse<>("Device deleted");
     }
 }
