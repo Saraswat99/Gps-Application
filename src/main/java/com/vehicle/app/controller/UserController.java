@@ -36,8 +36,8 @@ public class UserController {
     public List<UserDTO> listAll(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
         User user= (User) authentication.getPrincipal();
         log.info("Logged in ID: "+user.getId());
-        log.info("Logged in username: "+user.getUsername());
         return userService.listAll();
+
     }
 
     @DeleteMapping(value="/delete/{id}")
