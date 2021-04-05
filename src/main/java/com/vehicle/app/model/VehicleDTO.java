@@ -66,12 +66,11 @@ public class VehicleDTO {
         return vehicleDTO;
     }
 
-    public static void convertToExistingVehicle(Vehicle exisitingVehicle, VehicleDTO vehicleDTO) {
-        exisitingVehicle.setLat(vehicleDTO.getLat());
-        exisitingVehicle.setLng(vehicleDTO.getLng());
-        exisitingVehicle.setActive(vehicleDTO.isActive());
-        exisitingVehicle.setVehicleStatus(VehicleStatus.valueOf(vehicleDTO.getVehicleStatus()));
-        exisitingVehicle.setVehicleType(VehicleType.valueOf(vehicleDTO.getVehicleType()));
-
+    public static void convertToExistingVehicle(Vehicle existingVehicle, VehicleDTO vehicleDTO) {
+        existingVehicle.setLat(vehicleDTO.getLat());
+        existingVehicle.setLng(vehicleDTO.getLng());
+        existingVehicle.setActive(vehicleDTO.isActive());
+        existingVehicle.setVehicleStatus(VehicleStatus.valueOf(vehicleDTO.getVehicleStatus()));
+        existingVehicle.setVehicleType(VehicleType.valueOf(vehicleDTO.getVehicleType()));
     }
 }

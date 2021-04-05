@@ -2,7 +2,6 @@ package com.vehicle.app.config;
 
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.security.core.context.SecurityContextHolder;
-
 import java.util.Optional;
 
 public class CustomAuditorAware implements AuditorAware<String> {
@@ -12,5 +11,4 @@ public class CustomAuditorAware implements AuditorAware<String> {
         String loggedName = SecurityContextHolder.getContext().getAuthentication().getName();
         return Optional.of(loggedName);
     }
-
 }

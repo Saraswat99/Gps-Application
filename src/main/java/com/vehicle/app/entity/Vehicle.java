@@ -26,9 +26,10 @@ public class Vehicle extends BaseEntity {
     private VehicleType vehicleType;
     @Column
     private VehicleStatus vehicleStatus;
-    @OneToOne
+    @OneToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="device_id",nullable=false)
     private Device device;
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name="user_id",nullable=false)
     private User user;
 }

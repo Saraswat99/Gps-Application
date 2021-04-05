@@ -1,11 +1,14 @@
 package com.vehicle.app.service;
 
+import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.model.DeviceDTO;
+import com.vehicle.app.repository.VehicleRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -19,6 +22,8 @@ public class DeviceService {
     @Autowired
     private final DeviceRepository deviceRepository;
 
+    @Autowired
+    private final VehicleRepository vehicleRepository;
     //get all the devices
     public List<Device> findAll(String username) {
         return deviceRepository.findAll();
@@ -40,12 +45,14 @@ public class DeviceService {
     }
 
     //update device
-    public DeviceDTO update(DeviceDTO deviceDTO) {
+    public DeviceDTO update(DeviceDTO deviceDTO, Authentication authentication) {
         Long id=deviceDTO.getId();
         if(id==null||id<0){
             throw new RuntimeException("Please enter Device ID");
         }
         Optional<Device> optionalDevice=deviceRepository.findById(id);
+//          Vehicle vehicle=vehicleRepository.findByDeviceId(id);
+//        log.info(vehicle.toString()+"-----------------------------");
         if(optionalDevice.isPresent()){
             Device existingDevice=optionalDevice.get();
             log.info("Id {}",existingDevice.getId());

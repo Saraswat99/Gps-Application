@@ -38,9 +38,9 @@ public class DeviceController {
     }
 
     @PutMapping(value="/update")
-    public DeviceDTO update(@RequestBody DeviceDTO deviceDTO) {
+    public DeviceDTO update(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
 //        log.info(deviceDTO.toString());
-        return deviceService.update(deviceDTO);
+        return deviceService.update(deviceDTO, authentication);
     }
 
     @RequestMapping(method= RequestMethod.DELETE, value = "/{id}")
