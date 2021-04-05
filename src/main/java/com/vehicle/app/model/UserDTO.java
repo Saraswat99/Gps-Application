@@ -2,13 +2,11 @@ package com.vehicle.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vehicle.app.entity.User;
-import com.vehicle.app.entity.Vehicle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -41,7 +39,7 @@ public class UserDTO {
         userDTO.setUsername(user.getUsername());
         userDTO.setActive(user.isActive());
         userDTO.setEmailId(user.getEmailId());
-        userDTO.setPassword(user.getPassword());
+//        userDTO.setPassword(user.getPassword());
         return userDTO;
     }
 }

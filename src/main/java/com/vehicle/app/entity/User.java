@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 
 @ToString
@@ -41,9 +42,7 @@ public class User extends BaseEntity implements UserDetails {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+    public void setPassword(String password) { this.password = password; }
 
     public String getEmailId() {
         return emailId;

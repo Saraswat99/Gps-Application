@@ -7,12 +7,14 @@ import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class VehicleService {
     @Autowired
@@ -25,6 +27,7 @@ public class VehicleService {
     public VehicleDTO save(VehicleDTO vehicleDTO) {
         Device device=deviceRepository.findById(vehicleDTO.getDeviceId()).get();
         User user= userRepository.findById(vehicleDTO.getUserId()).get();
+       log.info(user.toString()+"+++++++++++++++++++++");
         if(device.isAssigned())
             throw new RuntimeException("Device already in use");
         else {
@@ -33,6 +36,7 @@ public class VehicleService {
             vehicle.setUser(user);
             vehicle.setDevice(device);
             vehicle = vehicleRepository.save(vehicle);
+            log.info(vehicle.toString()+"-------------------------");
             return VehicleDTO.convertToVehicleDTO(vehicle);
         }
     }
