@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
-@RequestMapping(value = "/devices")
+@RequestMapping(value = "/device")
 @RestController
 @PreAuthorize("hasRole('ROLE_USER')")
 public class DeviceController {

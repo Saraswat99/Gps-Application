@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
 
-@Entity
+
 @Slf4j
+@Entity
+@Table
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -24,11 +26,19 @@ public class User extends BaseEntity implements UserDetails {
     private String emailId;
     @Column
     private boolean active;
-    @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="user", fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
     @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
     private Set<Device> devices;
 
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
+    }
 
     public String getName() {
         return name;

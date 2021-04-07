@@ -57,7 +57,7 @@ public class DeviceService {
             throw new RuntimeException("Device already in use");
     }
 
-    //update device
+
     public DeviceDTO update(DeviceDTO deviceDTO, Authentication authentication) {
         Long deviceId = deviceDTO.getId();
         Optional.ofNullable(deviceId).filter(di->di>0).orElseThrow(()-> new RuntimeException("Please provide Device Id"));

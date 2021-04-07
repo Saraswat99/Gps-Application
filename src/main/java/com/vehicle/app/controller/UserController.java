@@ -2,6 +2,7 @@ package com.vehicle.app.controller;
 
 import com.vehicle.app.entity.User;
 import com.vehicle.app.model.ApiResponse;
+import com.vehicle.app.model.DeviceDTO;
 import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.service.UserService;
@@ -34,8 +35,8 @@ public class UserController {
     }
 
     @PutMapping(value="/update")
-    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
-        return userService.update(userDTO,authentication);
+    public UserDTO update(@RequestBody UserDTO userDTO) {
+        return userService.update(userDTO);
     }
 
     @GetMapping(value="/list")

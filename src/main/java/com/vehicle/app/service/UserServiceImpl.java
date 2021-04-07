@@ -3,7 +3,6 @@ package com.vehicle.app.service;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
-import com.vehicle.app.model.DeviceDTO;
 import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
@@ -54,7 +53,7 @@ public class UserServiceImpl implements UserService{
         return user.stream().map(UserDTO::convertToDTO).collect(Collectors.toList());
     }
 
-    public  UserDTO update(UserDTO userDTO, Authentication authentication){
+    public  UserDTO update(UserDTO userDTO){
         Long userId = userDTO.getId();
         Optional.ofNullable(userId).filter(ui->ui>0).orElseThrow(()-> new RuntimeException("Please provide User Id"));
         User existingUser = userRepository.findById(userId).orElseThrow(()-> new RuntimeException("User does not exist"));
