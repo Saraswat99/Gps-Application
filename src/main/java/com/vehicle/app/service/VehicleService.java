@@ -3,8 +3,6 @@ package com.vehicle.app.service;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
-import com.vehicle.app.enums.ApiConstant;
-import com.vehicle.app.exception.InvalidResourceAccess;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
@@ -28,11 +26,14 @@ public class VehicleService {
     private UserRepository userRepository;
 
     public VehicleDTO save(VehicleDTO vehicleDTO, Authentication authentication) {
-        Device device=deviceRepository.findById(vehicleDTO.getDeviceId()).get();
-        User user= userRepository.findById(vehicleDTO.getUserId()).get();
-        if(device.isAssigned())
-            throw new RuntimeException("Device already in use");
-        else {
+        final Long deviceId=vehicleDTO.getDeviceId();
+        final User userAuth=(User) authentication.getPrincipal();
+        final String createdBy=userAuth.getUsername();
+        final Long userId=userAuth.getId();
+        Optional.ofNullable(deviceId).filter(dev->dev>0).orElseThrow(()->new RuntimeException("Please enter device Id"));
+        Device device=deviceRepository.findByIdAndCreatedBy(deviceId,createdBy).orElseThrow(()->new RuntimeException("Device doesn't exist"));
+        final User user= userRepository.findById(userId).orElseThrow(()->new RuntimeException("User doesn't exist"));
+        if(!device.isAssigned()){
             device.setAssigned(true);
             Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
             vehicle.setUser(user);
@@ -40,10 +41,13 @@ public class VehicleService {
             vehicle = vehicleRepository.save(vehicle);
             return VehicleDTO.convertToVehicleDTO(vehicle);
         }
+        throw new RuntimeException("Device already in use");
     }
 
-    public List<Vehicle> getVehicleList() {
-        return vehicleRepository.findAll();
+    public List<Vehicle> getVehicleList(Authentication authentication) {
+        final User user=(User) authentication.getPrincipal();
+        final String createdBy=user.getUsername();
+        return vehicleRepository.findAllByCreatedBy(createdBy);
     }
 
     public Vehicle getVehicleById(Long vehicleId) {

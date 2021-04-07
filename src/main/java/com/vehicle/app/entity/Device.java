@@ -5,10 +5,10 @@ import com.vehicle.app.enums.SimOperator;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Fetch;
 
 import javax.persistence.*;
 
-@ToString
 @Setter
 @Getter
 @Entity
@@ -26,4 +26,8 @@ public class Device extends BaseEntity {
     private SimOperator simOperator;
     @Column(nullable=false)
     private DeviceType deviceType;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id",nullable=false)
+    private User user;
+
 }

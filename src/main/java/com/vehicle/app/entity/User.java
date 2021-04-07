@@ -1,8 +1,5 @@
 package com.vehicle.app.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -11,12 +8,11 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@ToString
-@Entity
 @Slf4j
+@Entity
+@Table
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -29,8 +25,18 @@ public class User extends BaseEntity implements UserDetails {
     private String emailId;
     @Column
     private boolean active;
-    @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="user", fetch= FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
+    @OneToMany(mappedBy="user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    private Set<Device> devices;
+
+    public Set<Device> getDevices() {
+        return devices;
+    }
+
+    public void setDevices(Set<Device> devices) {
+        this.devices = devices;
+    }
 
     public String getName() {
         return name;

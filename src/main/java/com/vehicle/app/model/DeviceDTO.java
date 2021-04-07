@@ -26,10 +26,12 @@ public class DeviceDTO{
     private String modifiedBy;
     private String added;
     private String updated;
+    private Long userId;
 
     public static DeviceDTO convertToDTO(Device device){
         DeviceDTO deviceDTO=new DeviceDTO();
         deviceDTO.setId(device.getId());
+        deviceDTO.setUserId(device.getUser().getId());
         deviceDTO.setImei(device.getImei());
         deviceDTO.setSimOperator(device.getSimOperator().name());
         deviceDTO.setDeviceType(device.getDeviceType().name());
@@ -49,7 +51,6 @@ public class DeviceDTO{
         device.setSimNumber(deviceDTO.getSimNumber());
         device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
         device.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
-//        device.setActive(deviceDTO.isActive());
         return device;
     }
 

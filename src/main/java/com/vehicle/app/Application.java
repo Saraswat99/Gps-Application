@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Slf4j
-@SpringBootApplication
 @EnableJpaAuditing
+@SpringBootApplication
 public class Application implements CommandLineRunner {
 
 	@Autowired

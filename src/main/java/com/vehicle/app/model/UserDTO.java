@@ -23,6 +23,7 @@ public class UserDTO {
     private String emailId;
     private boolean active;
     private List<String> vehicleNumber;
+    private List<String> imeiSimNum;
 
     public static User convertToUser(UserDTO userDTO){
         User user=new User();
@@ -41,7 +42,13 @@ public class UserDTO {
         userDTO.setUsername(user.getUsername());
         userDTO.setActive(user.isActive());
         userDTO.setEmailId(user.getEmailId());
-        userDTO.setPassword(user.getPassword());
         return userDTO;
+    }
+
+    public static void convertToExisitingUser(User exisitingUser, UserDTO userDTO) {
+        exisitingUser.setUsername(userDTO.getUsername());
+        exisitingUser.setName(userDTO.getName());
+        exisitingUser.setEmailId(userDTO.getEmailId());
+        exisitingUser.setActive(userDTO.isActive());
     }
 }

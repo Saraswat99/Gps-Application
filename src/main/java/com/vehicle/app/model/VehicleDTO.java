@@ -32,7 +32,6 @@ public class VehicleDTO {
     private String updated;
     private boolean assigned;
     private DeviceDTO deviceDTO;
-    private Long userId;
     private Long deviceId;
 
     public static Vehicle convertToVehicle(VehicleDTO vehicleDTO){
@@ -49,7 +48,6 @@ public class VehicleDTO {
     public static VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
         VehicleDTO vehicleDTO=new VehicleDTO();
         vehicleDTO.setId(vehicle.getId());
-        vehicleDTO.setUserId(vehicle.getUser().getId());
         vehicleDTO.setModifiedBy(vehicle.getModifiedBy());
         vehicleDTO.setCreatedBy(vehicle.getCreatedBy());
         vehicleDTO.setNumber(vehicle.getNumber());

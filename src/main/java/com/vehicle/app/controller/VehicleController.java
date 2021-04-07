@@ -5,6 +5,7 @@ import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.VehicleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/vehicle")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class VehicleController {
     @Autowired
     private VehicleService vehicleService;
@@ -30,8 +32,8 @@ public class VehicleController {
     }
 
     @GetMapping(value="/list")
-    public List<VehicleDTO> getVehicleList() {
-        List<Vehicle> vehicle=vehicleService.getVehicleList();
+    public List<VehicleDTO> getVehicleList(Authentication authentication) {
+        List<Vehicle> vehicle=vehicleService.getVehicleList(authentication);
         return vehicle.stream().map(VehicleDTO::convertToVehicleDTO).collect(Collectors.toList());
     }
 

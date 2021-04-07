@@ -7,6 +7,7 @@ import com.vehicle.app.service.DeviceService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,8 +17,9 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
-@RequestMapping(value = "/devices")
+@RequestMapping(value = "/device")
 @RestController
+@PreAuthorize("hasRole('ROLE_USER')")
 public class DeviceController {
 
     @Autowired
@@ -25,27 +27,23 @@ public class DeviceController {
 
     @GetMapping(value = "/list")
     public List<DeviceDTO> getAllDevices(Authentication authentication){
-        String username = authentication.getName();
-//        log.info("User ==>> {}",username);
-        List<Device> deviceList = deviceService.findAll(username);
+        List<Device> deviceList = deviceService.findAll(authentication);
         return deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList());
     }
 
     @PostMapping("/save")
-    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO){
-//        log.info(deviceDTO.toString());
-        return deviceService.save(deviceDTO);
+    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication){
+        return deviceService.save(deviceDTO,authentication);
     }
 
     @PutMapping(value="/update")
     public DeviceDTO update(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
-//        log.info(deviceDTO.toString());
         return deviceService.update(deviceDTO, authentication);
     }
 
     @RequestMapping(method= RequestMethod.DELETE, value = "/{id}")
-    public ApiResponse<String> deleteDevice(@PathVariable Long id){
-        deviceService.deleteById(id);
+    public ApiResponse<String> deleteDevice(@PathVariable Long id,Authentication authentication){
+        deviceService.deleteById(id,authentication);
         return new ApiResponse<>("Device deleted successfully");
     }
 }

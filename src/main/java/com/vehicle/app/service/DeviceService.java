@@ -1,9 +1,10 @@
 package com.vehicle.app.service;
 
-import com.vehicle.app.entity.Vehicle;
-import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.entity.Device;
+import com.vehicle.app.entity.User;
 import com.vehicle.app.model.DeviceDTO;
+import com.vehicle.app.repository.DeviceRepository;
+import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -21,46 +22,46 @@ public class DeviceService {
 
     @Autowired
     private final DeviceRepository deviceRepository;
-
     @Autowired
     private final VehicleRepository vehicleRepository;
-    //get all the devices
-    public List<Device> findAll(String username) {
-        return deviceRepository.findAll();
+    @Autowired
+    private final UserRepository userRepository;
+
+    public List<Device> findAll(Authentication authentication) {
+        final User user=(User) authentication.getPrincipal();
+        final String createdBy=user.getUsername();
+        return deviceRepository.findAllByCreatedBy(createdBy);
     }
 
-    //save device
-    public DeviceDTO save(DeviceDTO deviceDTO) {
-        Device device=deviceRepository.save(DeviceDTO.convertToDevice(deviceDTO));
-        return DeviceDTO.convertToDTO(device);
+    public DeviceDTO save(DeviceDTO deviceDTO,Authentication authentication) {
+        Device device=DeviceDTO.convertToDevice(deviceDTO);
+        User authUser=(User) authentication.getPrincipal();
+        final Long id=authUser.getId();
+        User user=userRepository.findById(id).get();
+        device.setUser(user);
+        Device savedDevice=deviceRepository.save(device);
+        return DeviceDTO.convertToDTO(savedDevice);
     }
 
-    //delete device
-    public void deleteById(Long id) {
-        Device device=deviceRepository.findById(id).get();
-        if(!device.isAssigned())
-            deviceRepository.deleteById(id);
-        else
+    public void deleteById(Long id,Authentication authentication) {
+        final User user=(User) authentication.getPrincipal();
+        final String createdBy=user.getUsername();
+        Device device=deviceRepository.findByIdAndCreatedBy(id,createdBy).orElseThrow(()->new RuntimeException("Device doesn't exist"));
+        if(device.isAssigned()) {
             throw new RuntimeException("Device already in use");
+        }
+        deviceRepository.deleteById(id);
     }
 
-    //update device
+
     public DeviceDTO update(DeviceDTO deviceDTO, Authentication authentication) {
-        Long id=deviceDTO.getId();
-        if(id==null||id<0){
-            throw new RuntimeException("Please enter Device ID");
-        }
-        Optional<Device> optionalDevice=deviceRepository.findById(id);
-//          Vehicle vehicle=vehicleRepository.findByDeviceId(id);
-//        log.info(vehicle.toString()+"-----------------------------");
-        if(optionalDevice.isPresent()){
-            Device existingDevice=optionalDevice.get();
-            log.info("Id {}",existingDevice.getId());
-            log.info("Existing Device {}",existingDevice);
-            DeviceDTO.convertToExistingDevice(existingDevice,deviceDTO);
-            existingDevice=deviceRepository.save(existingDevice);
-            return DeviceDTO.convertToDTO(existingDevice);
-        }
-        throw new RuntimeException("Device not found");
+        final Long id=deviceDTO.getId();
+        final User user=(User) authentication.getPrincipal();
+        final String createdBy=user.getUsername();
+        Optional.ofNullable(id).filter(dev->dev>0).orElseThrow(()->new RuntimeException("Please provide device id"));
+        Device existingDevice=deviceRepository.findByIdAndCreatedBy(id,createdBy).orElseThrow(()->new RuntimeException("Device doesn't exist"));
+        DeviceDTO.convertToExistingDevice(existingDevice,deviceDTO);
+        existingDevice=deviceRepository.save(existingDevice);
+        return DeviceDTO.convertToDTO(existingDevice);
     }
 }
