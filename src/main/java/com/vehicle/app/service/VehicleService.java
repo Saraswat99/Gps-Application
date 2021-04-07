@@ -18,6 +18,7 @@ import java.util.Optional;
 @Service
 @Slf4j
 public class VehicleService {
+
     @Autowired
     private VehicleRepository vehicleRepository;
     @Autowired
@@ -26,24 +27,29 @@ public class VehicleService {
     private UserRepository userRepository;
 
     public VehicleDTO save(VehicleDTO vehicleDTO, Authentication authentication) {
-        Device device=deviceRepository.findById(vehicleDTO.getDeviceId()).get();
-        User user= userRepository.findById(vehicleDTO.getUserId()).get();
-       log.info(user.toString()+"+++++++++++++++++++++");
-        if(device.isAssigned())
-            throw new RuntimeException("Device already in use");
-        else {
+        final Long deviceId=vehicleDTO.getDeviceId();
+        final User userAuth=(User) authentication.getPrincipal();
+        final Long userId = userAuth.getId();
+        final String createdBy = userAuth.getUsername();
+        Optional.ofNullable(userId).filter(us->us>0).orElseThrow(()->new RuntimeException("Please enter user id"));
+        Optional.ofNullable(deviceId).filter(dev->dev>0).orElseThrow(()->new RuntimeException("Please enter device Id"));
+        Device device=deviceRepository.findByIdAndCreatedBy(deviceId,createdBy).orElseThrow(()->new RuntimeException("Device doesn't exist"));
+        final User user=userRepository.findById(userId).get();
+        if(!device.isAssigned()){
             device.setAssigned(true);
             Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
             vehicle.setUser(user);
             vehicle.setDevice(device);
             vehicle = vehicleRepository.save(vehicle);
-            log.info(vehicle.toString()+"-------------------------");
             return VehicleDTO.convertToVehicleDTO(vehicle);
         }
+        throw new RuntimeException("Device already in use");
     }
 
-    public List<Vehicle> getVehicleList() {
-        return vehicleRepository.findAll();
+    public List<Vehicle> getVehicleList(Authentication authentication) {
+        final User user = (User) authentication.getPrincipal();
+        final Long userId = user.getId();
+        return vehicleRepository.findByUserId(userId);
     }
 
     public Vehicle getVehicleById(Long vehicleId) {
@@ -53,9 +59,9 @@ public class VehicleService {
 
     public VehicleDTO update(VehicleDTO vehicleDTO, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy=user.getUsername();
+        final String createdBy = user.getUsername();
         final Long vehicleId = vehicleDTO.getId();
-        final Long deviceId=vehicleDTO.getDeviceId();
+        final Long deviceId = vehicleDTO.getDeviceId();
         Optional.ofNullable(vehicleId).filter(vi->vi>0).orElseThrow(()-> new RuntimeException("Please provide vehicle Id"));
         Vehicle existingVehicle = vehicleRepository.findByIdAndCreatedBy(vehicleId,createdBy).orElseThrow(() -> new RuntimeException("Vehicle does not exists"));
         final Device device = deviceRepository.findByIdAndCreatedBy(deviceId,createdBy).orElseThrow(() -> new RuntimeException("Device does not exists"));
@@ -71,11 +77,11 @@ public class VehicleService {
     }
 
 
-    public void delete(Long vehicleId,Authentication authentication) {
+    public void delete(Long vehicleId, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy=user.getUsername();
+        final String createdBy = user.getUsername();
         final Vehicle existingVehicle = vehicleRepository.findByIdAndCreatedBy(vehicleId,createdBy).orElseThrow(() -> new RuntimeException("Vehicle does not exists"));
-        final Device device=existingVehicle.getDevice();
+        final Device device = existingVehicle.getDevice();
         device.setAssigned(false);
         vehicleRepository.deleteById(vehicleId);
     }

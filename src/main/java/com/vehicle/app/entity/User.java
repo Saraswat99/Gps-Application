@@ -1,6 +1,5 @@
 package com.vehicle.app.entity;
 
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -9,10 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
-@ToString
 @Entity
 @Slf4j
 public class User extends BaseEntity implements UserDetails {
@@ -21,7 +18,7 @@ public class User extends BaseEntity implements UserDetails {
     private String name;
     @Column(nullable=false, unique = true)
     private String username;
-    @Column(nullable=false)
+    @Column
     private String password;
     @Column(nullable=false, unique = true)
     private String emailId;
@@ -29,6 +26,9 @@ public class User extends BaseEntity implements UserDetails {
     private boolean active;
     @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
     private Set<Vehicle> vehicles;
+    @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
+    private Set<Device> devices;
+
 
     public String getName() {
         return name;
@@ -75,31 +75,26 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public String getUsername() {
-        log.info("getUsername -----------------------");
         return username;
     }
 
     @Override
     public String getPassword(){
-        log.info("getPassword -----------------------");
         return password;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        log.info("isAccountNonExpired -----------------------");
         return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        log.info("isAccountNonLocked -----------------------");
         return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        log.info("isCredentialsNonExpired -----------------------");
         return true;
     }
 

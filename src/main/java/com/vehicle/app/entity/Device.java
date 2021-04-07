@@ -26,4 +26,7 @@ public class Device extends BaseEntity {
     private SimOperator simOperator;
     @Column(nullable=false)
     private DeviceType deviceType;
+    @ManyToOne(fetch=FetchType.LAZY)
+    @JoinColumn(name="user_id",nullable=false)
+    private User user;
 }

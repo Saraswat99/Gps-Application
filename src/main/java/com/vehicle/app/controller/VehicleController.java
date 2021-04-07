@@ -1,11 +1,11 @@
 package com.vehicle.app.controller;
 
-import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.VehicleService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/vehicle")
+@PreAuthorize("hasRole('ROLE_USER')")
 public class VehicleController {
+
     @Autowired
     private VehicleService vehicleService;
     @Autowired
@@ -32,14 +34,12 @@ public class VehicleController {
 
     @GetMapping(value="/list")
     public List<VehicleDTO> getVehicleList(Authentication authentication) {
-        User user= (User) authentication.getPrincipal();
-
-        List<Vehicle> vehicles = vehicleService.getVehicleList();
+        List<Vehicle> vehicles = vehicleService.getVehicleList(authentication);
         return vehicles.stream().map(VehicleDTO::convertToVehicleDTO).collect(Collectors.toList());
     }
 
     @GetMapping(value="/list/{id}")
-    public VehicleDTO getVehicleById(@PathVariable long id) {
+    public VehicleDTO getVehicleById(@PathVariable Long id) {
         Vehicle vehicle= vehicleService.getVehicleById(id);
         return VehicleDTO.convertToVehicleDTO(vehicle);
     }
@@ -49,7 +49,7 @@ public class VehicleController {
         return vehicleService.update(vehicleDTO,authentication);
     }
 
-    @DeleteMapping(value="/delete/{id}")
+    @DeleteMapping(value="{id}")
     public ApiResponse<String> delete(@PathVariable Long id, Authentication authentication) {
         vehicleService.delete(id,authentication);
         return new ApiResponse<>("Vehicle successfully Deleted");

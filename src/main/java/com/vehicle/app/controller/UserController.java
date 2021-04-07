@@ -3,20 +3,21 @@ package com.vehicle.app.controller;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.UserDTO;
+import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 
 @Slf4j
 @RestController
 @RequestMapping("/user")
+@PreAuthorize("hasRole('ROLE_ADMIN')")
 public class UserController {
 
     @Autowired
@@ -24,7 +25,6 @@ public class UserController {
 
     @PostMapping(value = "/save")
     public ApiResponse<UserDTO> save(@RequestBody UserDTO userDTO, Authentication authentication) {
-        log.info(userDTO.getUsername()+"**********************************");
         return new ApiResponse<>(userService.save(userDTO));
     }
 
@@ -33,12 +33,14 @@ public class UserController {
         return userService.getUserById(userId);
     }
 
-    @GetMapping(value="/list")
-    public List<UserDTO> findAll(Authentication authentication, HttpServletRequest request, HttpServletResponse response) throws IOException {
-        User user= (User) authentication.getPrincipal();
-        log.info("Logged in ID: "+user.getId());
-        return userService.listAll();
+    @PutMapping(value="/update")
+    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
+        return userService.update(userDTO,authentication);
+    }
 
+    @GetMapping(value="/list")
+    public List<UserDTO> findAll() throws IOException {
+        return userService.listAll();
     }
 
     @DeleteMapping(value="/delete/{id}")

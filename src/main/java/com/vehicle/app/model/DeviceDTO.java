@@ -1,6 +1,7 @@
 package com.vehicle.app.model;
 
 import com.vehicle.app.entity.Device;
+import com.vehicle.app.entity.User;
 import com.vehicle.app.enums.DeviceType;
 import com.vehicle.app.enums.SimOperator;
 import com.vehicle.app.utils.DateTimeUtils;
@@ -26,10 +27,23 @@ public class DeviceDTO{
     private String modifiedBy;
     private String added;
     private String updated;
+    private Long userId;
+    private User user;
+
+    public static Device convertToDevice(DeviceDTO deviceDTO) {
+        Device device=new Device();
+        device.setImei(deviceDTO.getImei());
+        device.setSimNumber(deviceDTO.getSimNumber());
+        device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
+        device.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
+        device.setActive(deviceDTO.isActive());
+        return device;
+    }
 
     public static DeviceDTO convertToDTO(Device device){
         DeviceDTO deviceDTO=new DeviceDTO();
         deviceDTO.setId(device.getId());
+        deviceDTO.setUserId(device.getUser().getId());
         deviceDTO.setImei(device.getImei());
         deviceDTO.setSimOperator(device.getSimOperator().name());
         deviceDTO.setDeviceType(device.getDeviceType().name());
@@ -41,16 +55,6 @@ public class DeviceDTO{
         deviceDTO.setAdded(DateTimeUtils.convertToString(device.getAdded()));
         deviceDTO.setUpdated(DateTimeUtils.convertToString(device.getUpdated()));
         return deviceDTO;
-    }
-
-    public static Device convertToDevice(DeviceDTO deviceDTO) {
-        Device device=new Device();
-        device.setImei(deviceDTO.getImei());
-        device.setSimNumber(deviceDTO.getSimNumber());
-        device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
-        device.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
-//        device.setActive(deviceDTO.isActive());
-        return device;
     }
 
     public static void convertToExistingDevice(Device existingDevice, DeviceDTO deviceDTO) {

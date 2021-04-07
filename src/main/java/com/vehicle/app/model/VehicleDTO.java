@@ -1,10 +1,7 @@
 package com.vehicle.app.model;
 
-import com.vehicle.app.entity.Device;
-import com.vehicle.app.entity.User;
 import com.vehicle.app.enums.VehicleStatus;
 import com.vehicle.app.enums.VehicleType;
-import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.utils.DateTimeUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vehicle.app.entity.Vehicle;
@@ -12,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Slf4j
 @Setter
