@@ -31,7 +31,7 @@ public class RoleServiceImpl implements RoleService {
                 role1.setId(role.getId());
                 role1.setName(role.name());
                 roleRepository.save(role1);
-                log.info("Role save {}", role.name());
+                log.info("Role save {}", role.name()); 
             } else {
                 log.info("Role already exists {}", role.name());
             }
