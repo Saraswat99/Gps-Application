@@ -1,14 +1,14 @@
 package com.vehicle.app.entity;
 
+import com.vehicle.app.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Set;
+import java.util.*;
 
 
 @Slf4j
@@ -30,7 +30,13 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Vehicle> vehicles;
     @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
     private Set<Device> devices;
+    @ManyToMany(mappedBy="users", fetch = FetchType.LAZY)
+    private List<Role> roles;
 
+    private User user;
+
+    @Autowired
+    private RoleRepository roleRepository;
 
     public Set<Device> getDevices() {
         return devices;
@@ -80,7 +86,15 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        //return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        List<Role> roles = user.getRoles();
+        log.info("roles",roles);
+        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
+
+        for (Role role : roles) {
+            authorities.add(new SimpleGrantedAuthority(role.getRoleUser()));
+        }
+        return authorities;
     }
 
     @Override
@@ -112,4 +126,18 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
+
+    public List<Role> getRoles() {
+        return  roles;
+    }
+
+    public void setRoles(List<Role> roles) {
+        this.roles = roles;
+    }
+/*
+    @PostConstruct
+    public void saveUser(){
+        List<RoleUser>  roleUsers = Arrays.asList(RoleUser.valueOf("SUPER_ADMIN"),RoleUser.valueOf("ADMIN"));
+        roleUsers = roleRepository.saveUsers(roleUsers);
+    }*/
 }

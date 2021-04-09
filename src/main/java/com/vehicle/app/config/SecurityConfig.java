@@ -1,5 +1,6 @@
 package com.vehicle.app.config;
 
+import com.vehicle.app.service.UserServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -75,10 +76,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean("inMemoryUserDetailsService")
     public UserDetailsService userDetailsService() {
-        UserDetails user1 = User.withUsername("admin")
+       /* UserDetails user1 = User.withUsername("admin")
                         .password(passwordEncoder.encode("admin"))
                         .roles("ADMIN")
                         .build();
-        return new InMemoryUserDetailsManager(user1);
+        return new InMemoryUserDetailsManager(user1);*/
+
+        return new UserServiceImpl();
     }
 }

@@ -7,7 +7,9 @@ import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -22,12 +24,14 @@ import java.util.stream.Collectors;
 @Data
 @Slf4j
 @Service("customUserDetailsService")
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserServiceImpl implements UserService{
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final VehicleRepository vehicleRepository;
-    private final DeviceRepository deviceRepository;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private VehicleRepository vehicleRepository;
+    private DeviceRepository deviceRepository;
 
     public UserDTO save(UserDTO userDTO) {
         User user = UserDTO.convertToUser(userDTO);
