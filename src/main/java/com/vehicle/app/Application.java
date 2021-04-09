@@ -9,10 +9,8 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.util.List;
@@ -23,29 +21,30 @@ import java.util.Optional;
 @SpringBootApplication
 public class Application implements CommandLineRunner {
 
-	@Autowired
-	private DeviceRepository deviceRepository;
-	@Autowired
-	private RoleRepository roleRepository;
-	public static void main(String[] args) {
-		SpringApplication.run(Application.class, args);
-	}
+    @Autowired
+    private DeviceRepository deviceRepository;
+    @Autowired
+    private RoleRepository roleRepository;
 
-	@Bean
-	public AuditorAware<String> auditorProvider() {
-		return ()-> {
-			String userName=SecurityContextHolder.getContext().getAuthentication().getName();
-			return Optional.ofNullable(userName);
-		};
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(Application.class, args);
+    }
 
-	@Override
-	public void run(String... args) throws Exception {
-		List<Device> devices=deviceRepository.findAll();
-		log.info("Device list {}",devices.size());
-		devices.stream().forEach(emp->{
-			log.info(emp.toString());
-		});
-	}
+    @Bean
+    public AuditorAware<String> auditorProvider() {
+        return () -> {
+            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+            return Optional.ofNullable(userName);
+        };
+    }
+
+    @Override
+    public void run(String... args) throws Exception {
+        List<Device> devices = deviceRepository.findAll();
+        log.info("Device list {}", devices.size());
+        devices.stream().forEach(emp -> {
+            log.info(emp.toString());
+        });
+    }
 }
 

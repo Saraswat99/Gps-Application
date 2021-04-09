@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -23,15 +22,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true,jsr250Enabled = true,securedEnabled=true,proxyTargetClass = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true, securedEnabled = true, proxyTargetClass = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -45,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private UserDetailsService inMemoryUserDetailsService;
 
     @Bean("passwordEncoder")
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         log.info("PasswordEncoder bean initialized");
         return new BCryptPasswordEncoder();
     }
@@ -56,7 +53,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().disable()
                 .headers().frameOptions().disable().and()
                 .authorizeRequests()
-                .antMatchers("/h2-console","/h2-console/**").permitAll()
+                .antMatchers("/h2-console", "/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -84,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean("inMemoryUserDetailsService")
     public UserDetailsService userDetailsService() {
-        User user=new User();
+        User user = new User();
         user.setUsername("superadmin");
         user.setActive(true);
         user.setName("Super Admin");
@@ -94,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return new InMemoryUserDetailsManagerV1(user);
     }
 
-    class InMemoryUserDetailsManagerV1 extends InMemoryUserDetailsManager{
+    class InMemoryUserDetailsManagerV1 extends InMemoryUserDetailsManager {
 
         public InMemoryUserDetailsManagerV1(UserDetails... users) {
             super(users);
@@ -102,9 +99,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         @Override
         public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-            boolean isExists=this.userExists(username.toLowerCase());
+            boolean isExists = this.userExists(username.toLowerCase());
             if (isExists) {
-                User user=new User();
+                User user = new User();
                 user.setUsername("superadmin");
                 user.setActive(true);
                 user.setName("Super Admin");

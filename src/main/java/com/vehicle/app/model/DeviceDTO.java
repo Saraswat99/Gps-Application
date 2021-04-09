@@ -1,10 +1,10 @@
 package com.vehicle.app.model;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.enums.DeviceType;
 import com.vehicle.app.enums.SimOperator;
 import com.vehicle.app.utils.DateTimeUtils;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @Setter
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class DeviceDTO{
+public class DeviceDTO {
 
     private Long id;
     private String imei;
@@ -28,8 +28,8 @@ public class DeviceDTO{
     private String updated;
     private Long userId;
 
-    public static DeviceDTO convertToDTO(Device device){
-        DeviceDTO deviceDTO=new DeviceDTO();
+    public static DeviceDTO convertToDTO(Device device) {
+        DeviceDTO deviceDTO = new DeviceDTO();
         deviceDTO.setId(device.getId());
         deviceDTO.setUserId(device.getUser().getId());
         deviceDTO.setImei(device.getImei());
@@ -46,7 +46,7 @@ public class DeviceDTO{
     }
 
     public static Device convertToDevice(DeviceDTO deviceDTO) {
-        Device device=new Device();
+        Device device = new Device();
         device.setImei(deviceDTO.getImei());
         device.setSimNumber(deviceDTO.getSimNumber());
         device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));

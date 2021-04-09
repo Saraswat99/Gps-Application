@@ -12,13 +12,13 @@ public interface DateTimeUtils {
     DateFormat DF_DDMMYYYY_HHMMSS = new SimpleDateFormat("dd-mm-yyyy HH:mm:ss");
 
 
-    public static String convertToString(Date date){
+    static String convertToString(Date date) {
         String strDate = DF_DDMMYYYY_HHMMSS.format(date);
-        return  strDate;
+        return strDate;
     }
 
-    public static Date convertToDate(String dataString) throws ParseException {
-        Date date=DF_DDMMYYYY.parse(dataString);
+    static Date convertToDate(String dataString) throws ParseException {
+        Date date = DF_DDMMYYYY.parse(dataString);
         return date;
     }
 }

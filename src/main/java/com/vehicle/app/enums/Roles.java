@@ -1,18 +1,27 @@
 package com.vehicle.app.enums;
 
-import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
-
 public enum Roles {
-    SUPERADMIN(1L,"SA"),ADMIN(2L,"AD"),CLIENT(3L,"CL"),TRANSPORTER(4L,"TP");
+    SUPERADMIN(1L, "SA"), ADMIN(2L, "AD"), CLIENT(3L, "CL"), TRANSPORTER(4L, "TP");
 
     private Long id;
     private String alisa;
 
-    Roles(Long id,String alisa) {
+    Roles(Long id, String alisa) {
         this.id = id;
-        this.alisa=alisa;
+        this.alisa = alisa;
+    }
+
+    public static Roles getChildRole(String roleAlisa) {
+        switch (roleAlisa) {
+            case "SA":
+                return ADMIN;
+            case "AD":
+                return CLIENT;
+            case "CL":
+                return TRANSPORTER;
+            default:
+                return null;
+        }
     }
 
     public Long getId() {
@@ -29,18 +38,5 @@ public enum Roles {
 
     public void setAlisa(String alisa) {
         this.alisa = alisa;
-    }
-
-    public static Roles getChildRole(String roleAlisa) {
-        switch (roleAlisa){
-            case "SA":
-                return ADMIN;
-            case "AD":
-                return CLIENT;
-            case "CL":
-                return TRANSPORTER;
-            default:
-                return null;
-        }
     }
 }

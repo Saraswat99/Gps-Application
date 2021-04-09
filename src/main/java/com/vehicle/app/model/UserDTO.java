@@ -2,13 +2,11 @@ package com.vehicle.app.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vehicle.app.entity.User;
-import com.vehicle.app.entity.Vehicle;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
 import java.util.List;
-import java.util.Set;
 
 @Getter
 @Setter
@@ -25,8 +23,8 @@ public class UserDTO {
     private List<String> vehicleNumber;
     private List<String> imeiSimNum;
 
-    public static User convertToUser(UserDTO userDTO){
-        User user=new User();
+    public static User convertToUser(UserDTO userDTO) {
+        User user = new User();
         user.setName(userDTO.getName());
         user.setUsername(userDTO.getUsername());
         user.setEmailId(userDTO.getEmailId());
@@ -35,8 +33,8 @@ public class UserDTO {
         return user;
     }
 
-    public static UserDTO convertToDTO(User user){
-        UserDTO userDTO=new UserDTO();
+    public static UserDTO convertToDTO(User user) {
+        UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setName(user.getName());
         userDTO.setUsername(user.getUsername());

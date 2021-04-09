@@ -1,9 +1,9 @@
 package com.vehicle.app.controller;
 
+import com.vehicle.app.ServiceImpl.DeviceServiceImpl;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.DeviceDTO;
-import com.vehicle.app.ServiceImpl.DeviceServiceImpl;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +26,24 @@ public class DeviceController {
     private DeviceServiceImpl deviceServiceImpl;
 
     @GetMapping(value = "/list")
-    public List<DeviceDTO> getAllDevices(Authentication authentication){
+    public List<DeviceDTO> getAllDevices(Authentication authentication) {
         List<Device> deviceList = deviceServiceImpl.findAll(authentication);
         return deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList());
     }
 
     @PostMapping("/save")
-    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication){
-        return deviceServiceImpl.save(deviceDTO,authentication);
+    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
+        return deviceServiceImpl.save(deviceDTO, authentication);
     }
 
-    @PutMapping(value="/update")
+    @PutMapping(value = "/update")
     public DeviceDTO update(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
         return deviceServiceImpl.update(deviceDTO, authentication);
     }
 
-    @RequestMapping(method= RequestMethod.DELETE, value = "/{id}")
-    public ApiResponse<String> deleteDevice(@PathVariable Long id,Authentication authentication){
-        deviceServiceImpl.deleteById(id,authentication);
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
+        deviceServiceImpl.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");
     }
 }

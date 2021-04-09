@@ -15,36 +15,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/sadmin/v1/")
 @PreAuthorize("hasRole('ROLE_SUPERADMIN')")
-public class SuperAdminController{
+public class SuperAdminController {
 
     @Autowired
     protected UserService userService;
 
     @PostMapping(value = "/createAdmin")
     public ApiResponse<UserDTO> save(@RequestBody UserDTO userDTO, Authentication authentication) {
-        log.info("Role list - {}",authentication.getAuthorities());
+        log.info("Role list - {}", authentication.getAuthorities());
         log.info(userDTO.toString());
-        return new ApiResponse<>(userService.save(authentication,userDTO));
+        return new ApiResponse<>(userService.save(authentication, userDTO));
     }
 
-    @PutMapping(value="/updateAdmin")
-    public UserDTO update(@RequestBody UserDTO userDTO,Authentication authentication){
+    @PutMapping(value = "/updateAdmin")
+    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info(userDTO.toString());
-        return userService.update(authentication,userDTO);
+        return userService.update(authentication, userDTO);
     }
 
-    @GetMapping(value="/listAdmin/{userId}")
-    public UserDTO list(@PathVariable Long userId){
+    @GetMapping(value = "/listAdmin/{userId}")
+    public UserDTO list(@PathVariable Long userId) {
         return userService.list(userId);
     }
 
-    @GetMapping(value="/listAdmin")
+    @GetMapping(value = "/listAdmin")
     public List<UserDTO> listAll(Authentication authentication) {
         return userService.listAll(authentication);
     }
 
-    @DeleteMapping(value="/deleteAdmin/{id}")
-    public ApiResponse<String> delete(@PathVariable Long id){
+    @DeleteMapping(value = "/deleteAdmin/{id}")
+    public ApiResponse<String> delete(@PathVariable Long id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }

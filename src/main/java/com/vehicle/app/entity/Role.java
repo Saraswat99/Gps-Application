@@ -1,9 +1,7 @@
 package com.vehicle.app.entity;
 
-import com.vehicle.app.enums.Roles;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 import javax.persistence.*;
 import java.util.List;
@@ -16,11 +14,11 @@ public class Role{
    @Id
    @GeneratedValue(strategy = GenerationType.AUTO)
    private Long id;
-   @Column(unique = true,nullable = false)
+   @Column(unique = true, nullable = false)
    private String name;
    @Column
    private boolean isDefault;
-   @ManyToMany(mappedBy = "roles",fetch = FetchType.LAZY)
+   @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
    private List<User> users;
 
    public Role() {

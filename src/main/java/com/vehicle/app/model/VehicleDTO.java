@@ -1,17 +1,13 @@
 package com.vehicle.app.model;
 
-import com.vehicle.app.entity.Device;
-import com.vehicle.app.entity.User;
-import com.vehicle.app.enums.VehicleStatus;
-import com.vehicle.app.enums.VehicleType;
-import com.vehicle.app.repository.DeviceRepository;
-import com.vehicle.app.utils.DateTimeUtils;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.vehicle.app.entity.Vehicle;
+import com.vehicle.app.enums.VehicleStatus;
+import com.vehicle.app.enums.VehicleType;
+import com.vehicle.app.utils.DateTimeUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.beans.factory.annotation.Autowired;
 
 @Setter
 @Getter
@@ -34,11 +30,11 @@ public class VehicleDTO {
     private DeviceDTO deviceDTO;
     private Long deviceId;
 
-    public static Vehicle convertToVehicle(VehicleDTO vehicleDTO){
-        Vehicle vehicle=new Vehicle();
+    public static Vehicle convertToVehicle(VehicleDTO vehicleDTO) {
+        Vehicle vehicle = new Vehicle();
         vehicle.setNumber(vehicleDTO.getNumber());
         vehicle.setVehicleType(VehicleType.valueOf(vehicleDTO.getVehicleType()));
-        vehicle.setVehicleStatus(VehicleStatus. valueOf(vehicleDTO.getVehicleStatus()));
+        vehicle.setVehicleStatus(VehicleStatus.valueOf(vehicleDTO.getVehicleStatus()));
         vehicle.setActive(vehicleDTO.isActive());
         vehicle.setLat(vehicleDTO.getLat());
         vehicle.setLng(vehicleDTO.getLng());
@@ -46,7 +42,7 @@ public class VehicleDTO {
     }
 
     public static VehicleDTO convertToVehicleDTO(Vehicle vehicle) {
-        VehicleDTO vehicleDTO=new VehicleDTO();
+        VehicleDTO vehicleDTO = new VehicleDTO();
         vehicleDTO.setId(vehicle.getId());
         vehicleDTO.setModifiedBy(vehicle.getModifiedBy());
         vehicleDTO.setCreatedBy(vehicle.getCreatedBy());
