@@ -77,6 +77,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 
+
+    
     @Override
     @Bean("inMemoryUserDetailsService")
     public UserDetailsService userDetailsService() {
