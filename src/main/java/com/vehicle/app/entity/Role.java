@@ -3,24 +3,31 @@ package com.vehicle.app.entity;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.annotation.PostConstruct;
 import javax.persistence.*;
 import java.util.List;
 
-@Setter
 @Getter
-@Table
+@Setter
 @Entity
-public class Role{
+@Table(name = "role")
+public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    @Column(nullable = false)
-    private String roleUser;
-    @Column(nullable = false)
+    @Column(unique = true, nullable = false)
+    private String name;
+    @Column
     private boolean isDefault;
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private List<User> users;
+
+    public Role() {
+    }
+
+    public Role(Long id, String name, boolean isDefault) {
+        this.id = id;
+        this.name = name;
+        this.isDefault = isDefault;
+    }
 }

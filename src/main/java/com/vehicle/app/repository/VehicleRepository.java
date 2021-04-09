@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VehicleRepository extends JpaRepository<Vehicle,Long> {
+public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
 
     List<Vehicle> findByUserId(Long userId);
 
-    Optional<Vehicle> findByIdAndCreatedBy(Long id,String createdBy);
+    Optional<Vehicle> findByIdAndCreatedBy(Long id, String createdBy);
 }

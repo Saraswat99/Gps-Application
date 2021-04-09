@@ -18,7 +18,7 @@ import java.util.Date;
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     protected Long id;
     @CreatedBy
     protected String createdBy;
@@ -26,10 +26,10 @@ public class BaseEntity {
     protected String modifiedBy;
     @CreatedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "added", columnDefinition = "DATETIME",nullable = false, updatable = false)
+    @Column(name = "added", columnDefinition = "DATETIME", nullable = false, updatable = false)
     protected Date added;
     @LastModifiedDate
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", columnDefinition = "DATETIME",nullable = false)
+    @Column(name = "updated", columnDefinition = "DATETIME", nullable = false)
     protected Date updated;
 }

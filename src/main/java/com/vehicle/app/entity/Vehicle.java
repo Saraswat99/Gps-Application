@@ -4,6 +4,7 @@ import com.vehicle.app.enums.VehicleStatus;
 import com.vehicle.app.enums.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
+
 import javax.persistence.*;
 
 @Setter
@@ -24,10 +25,10 @@ public class Vehicle extends BaseEntity {
     private VehicleType vehicleType;
     @Column
     private VehicleStatus vehicleStatus;
-    @OneToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="device_id",nullable=true)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "device_id", nullable = true)
     private Device device;
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="user_id",nullable=false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }

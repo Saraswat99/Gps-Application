@@ -1,15 +1,15 @@
 package com.vehicle.app.entity;
 
-import com.vehicle.app.repository.RoleRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.util.*;
-
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Entity
@@ -18,25 +18,26 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String name;
-    @Column(nullable=false, unique = true)
+    @Column(nullable = false)
+    private String roleAlisa;
+    @Column(nullable = false, unique = true)
     private String username;
     @Column
     private String password;
-    @Column(nullable=false, unique = true)
+    @Column(nullable = false, unique = true)
     private String emailId;
     @Column
     private boolean active;
-    @OneToMany(mappedBy="user", fetch= FetchType.LAZY,cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
-    @OneToMany(mappedBy="user", fetch= FetchType.LAZY, cascade=CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Device> devices;
-    @ManyToMany(mappedBy="users", fetch = FetchType.LAZY)
-    private List<Role> roles;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Role> roles;
 
-    private User user;
-
-    @Autowired
-    private RoleRepository roleRepository;
+    public Set<Role> getRoles() {
+        return roles;
+    }
 
     public Set<Device> getDevices() {
         return devices;
@@ -54,11 +55,13 @@ public class User extends BaseEntity implements UserDetails {
         this.name = name;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public String getRoleAlisa() {
+        return roleAlisa;
     }
 
-    public void setPassword(String password) { this.password = password; }
+    public void setRoleAlisa(String roleAlisa) {
+        this.roleAlisa = roleAlisa;
+    }
 
     public String getEmailId() {
         return emailId;
@@ -86,15 +89,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
-        List<Role> roles = user.getRoles();
-        log.info("roles",roles);
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-
-        for (Role role : roles) {
-            authorities.add(new SimpleGrantedAuthority(role.getRoleUser()));
-        }
-        return authorities;
+        return this.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName())).collect(Collectors.toList());
     }
 
     @Override
@@ -102,9 +97,17 @@ public class User extends BaseEntity implements UserDetails {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     @Override
-    public String getPassword(){
+    public String getPassword() {
         return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     @Override
@@ -128,16 +131,14 @@ public class User extends BaseEntity implements UserDetails {
     }
 
     public List<Role> getRoles() {
-        return  roles;
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
-/*
-    @PostConstruct
-    public void saveUser(){
-        List<RoleUser>  roleUsers = Arrays.asList(RoleUser.valueOf("SUPER_ADMIN"),RoleUser.valueOf("ADMIN"));
-        roleUsers = roleRepository.saveUsers(roleUsers);
-    }*/
 }

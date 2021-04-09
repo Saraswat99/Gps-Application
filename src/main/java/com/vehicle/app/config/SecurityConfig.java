@@ -1,11 +1,14 @@
 package com.vehicle.app.config;
 
-import com.vehicle.app.service.UserServiceImpl;
+import com.vehicle.app.entity.Role;
+import com.vehicle.app.entity.User;
+import com.vehicle.app.enums.Roles;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -13,18 +16,20 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Slf4j
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true,jsr250Enabled = true,securedEnabled=true)
+@EnableGlobalMethodSecurity(prePostEnabled = true,jsr250Enabled = true,securedEnabled=true,proxyTargetClass = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -76,12 +81,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     @Bean("inMemoryUserDetailsService")
     public UserDetailsService userDetailsService() {
-       /* UserDetails user1 = User.withUsername("admin")
-                        .password(passwordEncoder.encode("admin"))
-                        .roles("ADMIN")
-                        .build();
-        return new InMemoryUserDetailsManager(user1);*/
+        User user=new User();
+        user.setUsername("superadmin");
+        user.setActive(true);
+        user.setName("Super Admin");
+        user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
+        user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
+        user.setPassword(passwordEncoder.encode("superadmin"));
+        return new InMemoryUserDetailsManagerV1(user);
+    }
 
-        return new UserServiceImpl();
+    class InMemoryUserDetailsManagerV1 extends InMemoryUserDetailsManager{
+
+        public InMemoryUserDetailsManagerV1(UserDetails... users) {
+            super(users);
+        }
+
+        @Override
+        public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+            boolean isExists=this.userExists(username.toLowerCase());
+            if (isExists) {
+                User user=new User();
+                user.setUsername("superadmin");
+                user.setActive(true);
+                user.setName("Super Admin");
+                user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
+                user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
+                user.setPassword(passwordEncoder.encode("superadmin"));
+                return user;
+            } else {
+                throw new UsernameNotFoundException(username);
+            }
+        }
     }
 }
