@@ -49,7 +49,7 @@ public class VehicleController {
         return vehicleServiceImpl.update(vehicleDTO, authentication);
     }
 
-    @DeleteMapping(value = "{id}")
+    @DeleteMapping(value = "/delete/{id}")
     public ApiResponse<String> delete(@PathVariable Long id, Authentication authentication) {
         vehicleServiceImpl.delete(id, authentication);
         return new ApiResponse<>("Vehicle successfully Deleted");

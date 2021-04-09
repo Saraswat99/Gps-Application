@@ -17,4 +17,6 @@ public interface UserService extends UserDetailsService {
     UserDTO save(Authentication authentication, UserDTO userDTO);
 
     UserDTO update(Authentication authentication, UserDTO userDTO);
+
+    UserDTO list(Long userId);
 }

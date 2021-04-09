@@ -14,4 +14,6 @@ public interface DeviceRepository extends JpaRepository<Device, Long> {
     Optional<Device> findByIdAndCreatedBy(Long id, String createdBy);
 
     List<Device> findByCreatedBy(String createdBy);
+
+    List<Device> findAllByCreatedBy(String createdBy);
 }

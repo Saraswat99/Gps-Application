@@ -41,6 +41,7 @@ public class DeviceController {
         return deviceServiceImpl.update(deviceDTO, authentication);
     }
 
+    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
         deviceServiceImpl.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");

@@ -130,15 +130,7 @@ public class User extends BaseEntity implements UserDetails {
         return active;
     }
 
-    public List<Role> getRoles() {
-        return roles;
-    }
-
     public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public void setRoles(List<Role> roles) {
         this.roles = roles;
     }
 }

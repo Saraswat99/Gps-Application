@@ -13,4 +13,8 @@ public interface VehicleRepository extends JpaRepository<Vehicle, Long> {
     List<Vehicle> findByUserId(Long userId);
 
     Optional<Vehicle> findByIdAndCreatedBy(Long id, String createdBy);
+
+    List<Vehicle> findAllByCreatedBy(String createdBy);
+
+    void deleteByUserId(Long id);
 }

@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         }).collect(Collectors.toList());
         List<String> vehicleNumber = vehicles.stream().map(vehicle -> vehicle.getNumber()).collect(Collectors.toList());
         userDTO.setVehicleNumber(vehicleNumber);
-        userDTO.setDeviceImei(deviceImei);
+        userDTO.setImeiSimNum(imeiSimNum);
         return userDTO;
     }
 
@@ -67,13 +67,6 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> listAll(Authentication authentication) {
         List<User> user = userRepository.findByCreatedBy(authentication.getName());
         return user.stream().map(UserDTO::convertToDTO).collect(Collectors.toList());
-    }
-
-    @Override
-    public void delete(Long id) {
-        Optional.ofNullable(id).filter(i -> i > 0).orElseThrow(() -> new RuntimeException("Please provide user id"));
-        final User user = userRepository.findById(id).orElseThrow(() -> new RuntimeException("User doesn't found"));
-        userRepository.deleteById(id);
     }
 
     @Override
@@ -92,10 +85,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDTO getUserById(Long userId) {
+        return null;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        log.info("User name :" + username);
         User user = userRepository.findByUsername(username);
-        Optional.ofNullable(user).filter(vi -> vi != null).orElseThrow(() -> new UsernameNotFoundException("User does not exists  " + username));
+        if (user == null) {
+            throw new UsernameNotFoundException("User does not exists  " + username);
+        }
         return user;
     }
 }
