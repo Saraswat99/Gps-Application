@@ -41,12 +41,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("inMemoryUserDetailsService")
     private UserDetailsService inMemoryUserDetailsService;
 
-    @Bean("passwordEncoder")
-    public PasswordEncoder passwordEncoder() {
-        log.info("PasswordEncoder bean initialized");
-        return new BCryptPasswordEncoder();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()

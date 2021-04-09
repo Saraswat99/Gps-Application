@@ -8,6 +8,7 @@ import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.VehicleService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -16,14 +17,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Data
 @Slf4j
+@Service
 public class VehicleServiceImpl implements VehicleService {
-    @Autowired
+
     private VehicleRepository vehicleRepository;
-    @Autowired
     private DeviceRepository deviceRepository;
-    @Autowired
     private UserRepository userRepository;
 
     @Override

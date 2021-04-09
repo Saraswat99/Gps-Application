@@ -16,17 +16,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 @Data
+@Slf4j
 @Service
 public class DeviceServiceImpl implements DeviceService {
 
-    @Autowired
-    private final DeviceRepository deviceRepository;
-    @Autowired
-    private final VehicleRepository vehicleRepository;
-    @Autowired
     private final UserRepository userRepository;
+    private final DeviceRepository deviceRepository;
+    private final VehicleRepository vehicleRepository;
 
     public List<Device> findAll(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
