@@ -12,6 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.AuditorAware;
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +38,12 @@ public class Application implements CommandLineRunner {
             String userName = SecurityContextHolder.getContext().getAuthentication().getName();
             return Optional.ofNullable(userName);
         };
+    }
+
+    @Bean("passwordEncoder")
+    public PasswordEncoder passwordEncoder() {
+        log.info("PasswordEncoder bean initialized");
+        return new BCryptPasswordEncoder();
     }
 
     @Override
