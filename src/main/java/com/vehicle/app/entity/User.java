@@ -1,6 +1,7 @@
 package com.vehicle.app.entity;
 
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,6 +10,7 @@ import javax.persistence.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Entity
@@ -17,6 +19,8 @@ public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
+    private String roleAlisa;
     @Column(nullable=false, unique = true)
     private String username;
     @Column(nullable=false)
@@ -29,6 +33,16 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Vehicle> vehicles;
     @OneToMany(mappedBy="user",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     private Set<Device> devices;
+    @ManyToMany(fetch = FetchType.LAZY)
+    private Set<Role> roles;
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
 
     public Set<Device> getDevices() {
         return devices;
@@ -44,6 +58,14 @@ public class User extends BaseEntity implements UserDetails {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getRoleAlisa() {
+        return roleAlisa;
+    }
+
+    public void setRoleAlisa(String roleAlisa) {
+        this.roleAlisa = roleAlisa;
     }
 
     public void setUsername(String username) {
@@ -80,7 +102,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return Arrays.asList(new SimpleGrantedAuthority("ROLE_USER"));
+        return this.getRoles().stream().map(role -> new SimpleGrantedAuthority("ROLE_"+role.getName())).collect(Collectors.toList());
     }
 
     @Override
