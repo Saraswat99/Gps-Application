@@ -1,9 +1,9 @@
 package com.vehicle.app.controller;
 
-import com.vehicle.app.ServiceImpl.DeviceServiceImpl;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.DeviceDTO;
+import com.vehicle.app.service.DeviceService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,33 +17,34 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Data
-@RequestMapping(value = "/device")
 @RestController
-@PreAuthorize("hasRole('ROLE_USER')")
+@RequestMapping(value = "/device")
 public class DeviceController {
 
     @Autowired
-    private DeviceServiceImpl deviceServiceImpl;
+    private DeviceService deviceService;
 
     @GetMapping(value = "/list")
-    public List<DeviceDTO> getAllDevices(Authentication authentication) {
-        List<Device> deviceList = deviceServiceImpl.findAll(authentication);
-        return deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList());
+    public ApiResponse<List<DeviceDTO>> listAllDevices(Authentication authentication) {
+        List<Device> deviceList = deviceService.listAllDevices(authentication);
+        return new ApiResponse<>(deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList()));
     }
 
     @PostMapping("/save")
-    public DeviceDTO saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
-        return deviceServiceImpl.save(deviceDTO, authentication);
+    @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<DeviceDTO> saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
+        return new ApiResponse<>(deviceService.saveDevice(deviceDTO, authentication));
     }
 
     @PutMapping(value = "/update")
-    public DeviceDTO update(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
-        return deviceServiceImpl.update(deviceDTO, authentication);
+    @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<DeviceDTO> updateDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
+        return new ApiResponse<>(deviceService.updateDevice(deviceDTO, authentication));
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
     public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
-        deviceServiceImpl.deleteById(id, authentication);
+        deviceService.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");
     }
 }

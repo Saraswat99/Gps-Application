@@ -21,30 +21,30 @@ public class ClientController {
     protected UserService userService;
 
     @PostMapping(value = "/createTransporter")
-    public ApiResponse<UserDTO> save(@RequestBody UserDTO userDTO, Authentication authentication) {
+    public ApiResponse<UserDTO> createTransporter(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info("Role list - {}", authentication.getAuthorities());
         log.info(userDTO.toString());
         return new ApiResponse<>(userService.save(authentication, userDTO));
     }
 
     @PutMapping(value = "/updateTransporter")
-    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
+    public ApiResponse<UserDTO> updateTransporter(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info(userDTO.toString());
-        return userService.update(authentication, userDTO);
+        return new ApiResponse<>(userService.update(authentication, userDTO));
     }
 
     @GetMapping(value = "/listTransporter/{userId}")
-    public UserDTO list(@PathVariable Long userId) {
-        return userService.list(userId);
+    public ApiResponse<UserDTO> listTransporter(@PathVariable Long userId) {
+        return new ApiResponse<>(userService.list(userId));
     }
 
     @GetMapping(value = "/listTransporter")
-    public List<UserDTO> listAll(Authentication authentication) {
-        return userService.listAll(authentication);
+    public ApiResponse<List<UserDTO>> listTransporter(Authentication authentication) {
+        return new ApiResponse<>(userService.listAll(authentication));
     }
 
     @DeleteMapping(value = "/deleteTransporter/{id}")
-    public ApiResponse<String> delete(@PathVariable Long id) {
+    public ApiResponse<String> deleteTransporter(@PathVariable Long id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }

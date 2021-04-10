@@ -10,7 +10,6 @@ import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.VehicleService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -22,12 +21,12 @@ import java.util.Optional;
 @Service
 public class VehicleServiceImpl implements VehicleService {
 
-    private VehicleRepository vehicleRepository;
-    private DeviceRepository deviceRepository;
-    private UserRepository userRepository;
+    private final VehicleRepository vehicleRepository;
+    private final DeviceRepository deviceRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public VehicleDTO save(VehicleDTO vehicleDTO, Authentication authentication) {
+    public VehicleDTO saveVehicle(VehicleDTO vehicleDTO, Authentication authentication) {
         final Long deviceId = vehicleDTO.getDeviceId();
         final User userAuth = (User) authentication.getPrincipal();
         final String createdBy = userAuth.getUsername();
@@ -47,7 +46,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public List<Vehicle> getVehicleList(Authentication authentication) {
+    public List<Vehicle> listVehicleList(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
         return vehicleRepository.findAllByCreatedBy(createdBy);
@@ -60,7 +59,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public VehicleDTO update(VehicleDTO vehicleDTO, Authentication authentication) {
+    public VehicleDTO updateVehicle(VehicleDTO vehicleDTO, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
         final Long vehicleId = vehicleDTO.getId();
@@ -80,7 +79,7 @@ public class VehicleServiceImpl implements VehicleService {
     }
 
     @Override
-    public void delete(Long vehicleId, Authentication authentication) {
+    public void deleteVehicle(Long vehicleId, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
         final Vehicle existingVehicle = vehicleRepository.findByIdAndCreatedBy(vehicleId, createdBy).orElseThrow(() -> new RuntimeException("Vehicle does not exists"));

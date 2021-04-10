@@ -28,19 +28,19 @@ public class SuperAdminController {
     }
 
     @PutMapping(value = "/updateAdmin")
-    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
+    public ApiResponse<UserDTO> update(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info(userDTO.toString());
-        return userService.update(authentication, userDTO);
+        return new ApiResponse<>(userService.update(authentication, userDTO));
     }
 
     @GetMapping(value = "/listAdmin/{userId}")
-    public UserDTO list(@PathVariable Long userId) {
-        return userService.list(userId);
+    public ApiResponse<UserDTO> list(@PathVariable Long userId) {
+        return new ApiResponse<>(userService.list(userId));
     }
 
     @GetMapping(value = "/listAdmin")
-    public List<UserDTO> listAll(Authentication authentication) {
-        return userService.listAll(authentication);
+    public ApiResponse<List<UserDTO>> listAll(Authentication authentication) {
+        return new ApiResponse<>(userService.listAll(authentication));
     }
 
     @DeleteMapping(value = "/deleteAdmin/{id}")

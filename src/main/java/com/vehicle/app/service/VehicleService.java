@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface VehicleService {
 
-    VehicleDTO save(VehicleDTO vehicleDTO, Authentication authentication);
-
-    List<Vehicle> getVehicleList(Authentication authentication);
-
     Vehicle getVehicleById(Long vehicleId);
 
-    VehicleDTO update(VehicleDTO vehicleDTO, Authentication authentication);
+    VehicleDTO saveVehicle(VehicleDTO vehicleDTO, Authentication authentication);
 
-    void delete(Long vehicleId, Authentication authentication);
+    List<Vehicle> listVehicleList(Authentication authentication);
+
+    VehicleDTO updateVehicle(VehicleDTO vehicleDTO, Authentication authentication);
+
+    void deleteVehicle(Long id, Authentication authentication);
 }

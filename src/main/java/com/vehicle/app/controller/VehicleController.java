@@ -1,10 +1,10 @@
 package com.vehicle.app.controller;
 
-import com.vehicle.app.ServiceImpl.VehicleServiceImpl;
 import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.VehicleRepository;
+import com.vehicle.app.service.VehicleService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,39 +19,40 @@ import java.util.stream.Collectors;
 @Slf4j
 @RestController
 @RequestMapping("/vehicle")
-@PreAuthorize("hasRole('ROLE_USER')")
 public class VehicleController {
 
     @Autowired
-    private VehicleServiceImpl vehicleServiceImpl;
+    private VehicleService vehicleService;
     @Autowired
     private VehicleRepository vehicleRepository;
 
     @PostMapping(value = "/save")
-    public VehicleDTO save(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
-        return vehicleServiceImpl.save(vehicleDTO, authentication);
+    @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<VehicleDTO> saveVehicle(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
+        return new ApiResponse<>(vehicleService.saveVehicle(vehicleDTO, authentication));
     }
 
     @GetMapping(value = "/list")
-    public List<VehicleDTO> getVehicleList(Authentication authentication) {
-        List<Vehicle> vehicle = vehicleServiceImpl.getVehicleList(authentication);
-        return vehicle.stream().map(VehicleDTO::convertToVehicleDTO).collect(Collectors.toList());
+    public ApiResponse<List<VehicleDTO>> listVehicleList(Authentication authentication) {
+        List<Vehicle> vehicle = vehicleService.listVehicleList(authentication);
+        return new ApiResponse<>(vehicle.stream().map(VehicleDTO::convertToVehicleDTO).collect(Collectors.toList()));
     }
 
     @GetMapping(value = "/list/{id}")
-    public VehicleDTO getVehicleById(@PathVariable long id) {
-        Vehicle vehicle = vehicleServiceImpl.getVehicleById(id);
-        return VehicleDTO.convertToVehicleDTO(vehicle);
+    public ApiResponse<VehicleDTO> getVehicleById(@PathVariable long id) {
+        Vehicle vehicle = vehicleService.getVehicleById(id);
+        return new ApiResponse<>(VehicleDTO.convertToVehicleDTO(vehicle));
     }
 
     @PutMapping(value = "/update")
-    public VehicleDTO update(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
-        return vehicleServiceImpl.update(vehicleDTO, authentication);
+    @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<VehicleDTO> updateVehicle(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
+        return new ApiResponse<>(vehicleService.updateVehicle(vehicleDTO, authentication));
     }
 
     @DeleteMapping(value = "/delete/{id}")
-    public ApiResponse<String> delete(@PathVariable Long id, Authentication authentication) {
-        vehicleServiceImpl.delete(id, authentication);
+    public ApiResponse<String> deleteVehicle(@PathVariable Long id, Authentication authentication) {
+        vehicleService.deleteVehicle(id, authentication);
         return new ApiResponse<>("Vehicle successfully Deleted");
     }
 }

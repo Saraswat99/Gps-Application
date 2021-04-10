@@ -8,11 +8,11 @@ import java.util.List;
 
 public interface DeviceService {
 
-    List<Device> findAll(Authentication authentication);
+    List<Device> listAllDevices(Authentication authentication);
 
-    DeviceDTO save(DeviceDTO deviceDTO, Authentication authentication);
+    DeviceDTO saveDevice(DeviceDTO deviceDTO, Authentication authentication);
+
+    DeviceDTO updateDevice(DeviceDTO deviceDTO, Authentication authentication);
 
     void deleteById(Long id, Authentication authentication);
-
-    DeviceDTO update(DeviceDTO deviceDTO, Authentication authentication);
 }

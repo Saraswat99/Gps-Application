@@ -21,30 +21,30 @@ public class AdminController {
     protected UserService userService;
 
     @PostMapping(value = "/createClient")
-    public ApiResponse<UserDTO> save(@RequestBody UserDTO userDTO, Authentication authentication) {
+    public ApiResponse<UserDTO> createClient(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info("Role list - {}", authentication.getAuthorities());
         log.info(userDTO.toString());
         return new ApiResponse<>(userService.save(authentication, userDTO));
     }
 
     @PutMapping(value = "/updateClient")
-    public UserDTO update(@RequestBody UserDTO userDTO, Authentication authentication) {
+    public ApiResponse<UserDTO> updateClient(@RequestBody UserDTO userDTO, Authentication authentication) {
         log.info(userDTO.toString());
-        return userService.update(authentication, userDTO);
+        return new ApiResponse<>(userService.update(authentication, userDTO));
     }
 
     @GetMapping(value = "/listClient/{userId}")
-    public UserDTO list(@PathVariable Long userId) {
-        return userService.list(userId);
+    public ApiResponse<UserDTO> listClient(@PathVariable Long userId) {
+        return new ApiResponse<>(userService.list(userId));
     }
 
     @GetMapping(value = "/listClient")
-    public List<UserDTO> listAll(Authentication authentication) {
-        return userService.listAll(authentication);
+    public ApiResponse<List<UserDTO>> listClient(Authentication authentication) {
+        return new ApiResponse<>(userService.listAll(authentication));
     }
 
     @DeleteMapping(value = "/deleteClient/{id}")
-    public ApiResponse<String> delete(@PathVariable Long id) {
+    public ApiResponse<String> deleteClient(@PathVariable Long id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }
