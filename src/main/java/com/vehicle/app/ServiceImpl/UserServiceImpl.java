@@ -10,6 +10,7 @@ import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.RoleRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
+import com.vehicle.app.service.RoleService;
 import com.vehicle.app.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
@@ -19,29 +20,38 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 @Slf4j
 @Service("customUserDetailsService")
 public class UserServiceImpl implements UserService {
 
+    private final RoleService roleService;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
     private final PasswordEncoder passwordEncoder;
-    private final VehicleRepository vehicleRepository;
     private final DeviceRepository deviceRepository;
+    private final VehicleRepository vehicleRepository;
+
+
+    @PostConstruct
+    private void init(){
+
+    }
 
     @Override
     public UserDTO save(Authentication authentication, UserDTO userDTO) {
         User parent = (User) authentication.getPrincipal();
         User user = UserDTO.convertToUser(userDTO);
+        user.setParent(parent);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Roles roles = Roles.getChildRole(parent.getRoleAlisa());
-        Role childRole = roleRepository.findById(roles.getId()).get();
+        Role childRole = roleService.findById(roles.getId());
         user.setRoles(Set.of(childRole));
         user.setRoleAlisa(roles.getAlisa());
         user = userRepository.save(user);
@@ -54,9 +64,7 @@ public class UserServiceImpl implements UserService {
         List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
         List<Device> devices = deviceRepository.findByUserId(userId);
         UserDTO userDTO = UserDTO.convertToDTO(user);
-        List<String> imeiSimNum = devices.stream().map(dev -> {
-            return "Imei : " + dev.getImei() + ", Sim Number : " + dev.getSimNumber();
-        }).collect(Collectors.toList());
+        List<String> imeiSimNum = devices.stream().map(device ->  device.getImei() ).collect(Collectors.toList());
         List<String> vehicleNumber = vehicles.stream().map(vehicle -> vehicle.getNumber()).collect(Collectors.toList());
         userDTO.setVehicleNumber(vehicleNumber);
         userDTO.setImeiSimNum(imeiSimNum);
@@ -79,14 +87,14 @@ public class UserServiceImpl implements UserService {
         return UserDTO.convertToDTO(existingUser);
     }
 
+    @Override
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     public void delete(Long id) {
         userRepository.findById(id).orElseThrow(() -> new RuntimeException("No User Found"));
         userRepository.deleteById(id);
-    }
-
-    @Override
-    public UserDTO getUserById(Long userId) {
-        return null;
     }
 
     @Override

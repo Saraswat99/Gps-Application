@@ -36,9 +36,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     @Qualifier("customUserDetailsService")
     private UserDetailsService userDetailsService;
-    @Autowired
-    @Qualifier("inMemoryUserDetailsService")
-    private UserDetailsService inMemoryUserDetailsService;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
@@ -58,8 +55,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder)
-                .and()
-                .userDetailsService(inMemoryUserDetailsService)
                 .passwordEncoder(passwordEncoder).setBuilder(auth);
     }
 
@@ -72,7 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
 
     
-    @Override
+   /* @Override
     @Bean("inMemoryUserDetailsService")
     public UserDetailsService userDetailsService() {
         User user = new User();
@@ -82,8 +77,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
         user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
         user.setPassword(passwordEncoder.encode("superadmin"));
+        user.setLevel("superadmin");
         return new InMemoryUserDetailsManagerV1(user);
-    }
+    }*/
 
     class InMemoryUserDetailsManagerV1 extends InMemoryUserDetailsManager {
 
@@ -102,6 +98,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
                 user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
                 user.setPassword(passwordEncoder.encode("superadmin"));
+                user.setLevel("superadmin");
                 return user;
             } else {
                 throw new UsernameNotFoundException(username);

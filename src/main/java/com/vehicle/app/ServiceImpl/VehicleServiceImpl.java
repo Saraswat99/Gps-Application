@@ -28,34 +28,16 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public VehicleDTO saveVehicle(VehicleDTO vehicleDTO, Authentication authentication) {
         final Long deviceId = vehicleDTO.getDeviceId();
-        final User userAuth = (User) authentication.getPrincipal();
-        final String createdBy = userAuth.getUsername();
-        final Long userId = userAuth.getId();
-        Optional.ofNullable(deviceId).filter(dev -> dev > 0).orElseThrow(() -> new RuntimeException("Please enter device Id"));
-        Device device = deviceRepository.findByIdAndCreatedBy(deviceId, createdBy).orElseThrow(() -> new RuntimeException("Device doesn't exist"));
-        final User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User doesn't exist"));
-        if (!device.isAssigned()) {
-            device.setAssigned(true);
-            Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
-            vehicle.setUser(user);
-            vehicle.setDevice(device);
-            vehicle = vehicleRepository.save(vehicle);
-            return VehicleDTO.convertToVehicleDTO(vehicle);
-        }
-        throw new RuntimeException("Device already in use");
-    }
-
-    @Override
-    public List<Vehicle> listVehicleList(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
-        return vehicleRepository.findAllByCreatedBy(createdBy);
-    }
-
-    @Override
-    public Vehicle getVehicleById(Long vehicleId) {
-        Optional.ofNullable(vehicleId).filter(vi -> vi > 0).orElseThrow(() -> new RuntimeException("Please provide vehicle Id"));
-        return vehicleRepository.findById(vehicleId).get();
+        Optional.ofNullable(deviceId).filter(dId -> dId > 0).orElseThrow(() -> new RuntimeException("Please enter device Id"));
+        Device device = deviceRepository.findByIdAndAssignedAndCreatedBy(deviceId,false, createdBy).orElseThrow(() -> new RuntimeException("Device doesn't exist or already asigned"));
+        device.setAssigned(true);
+        Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
+        vehicle.setUser(user);
+        vehicle.setDevice(device);
+        vehicle = vehicleRepository.save(vehicle);
+        return VehicleDTO.convertToVehicleDTO(vehicle);
     }
 
     @Override
@@ -76,6 +58,19 @@ public class VehicleServiceImpl implements VehicleService {
         VehicleDTO.convertToExistingVehicle(existingVehicle, vehicleDTO);
         existingVehicle = vehicleRepository.save(existingVehicle);
         return VehicleDTO.convertToVehicleDTO(existingVehicle);
+    }
+
+    @Override
+    public List<Vehicle> listVehicleList(Authentication authentication) {
+        final User user = (User) authentication.getPrincipal();
+        final String createdBy = user.getUsername();
+        return vehicleRepository.findAllByCreatedBy(createdBy);
+    }
+
+    @Override
+    public Vehicle getVehicleById(Long vehicleId) {
+        Optional.ofNullable(vehicleId).filter(vi -> vi > 0).orElseThrow(() -> new RuntimeException("Please provide vehicle Id"));
+        return vehicleRepository.findById(vehicleId).get();
     }
 
     @Override

@@ -37,4 +37,9 @@ public class RoleServiceImpl implements RoleService {
         });
         log.info("############## Role Init Stop #################");
     }
+
+    @Override
+    public Role findById(Long id) {
+        return roleRepository.findById(id).get();
+    }
 }

@@ -1,5 +1,6 @@
 package com.vehicle.app.service;
 
+import com.vehicle.app.entity.User;
 import com.vehicle.app.model.UserDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +11,7 @@ public interface UserService extends UserDetailsService {
 
     void delete(Long id);
 
-    UserDTO getUserById(Long userId);
+    UserDTO list(Long userId);
 
     List<UserDTO> listAll(Authentication authentication);
 
@@ -18,5 +19,5 @@ public interface UserService extends UserDetailsService {
 
     UserDTO update(Authentication authentication, UserDTO userDTO);
 
-    UserDTO list(Long userId);
+    User findByUsername(String username);
 }

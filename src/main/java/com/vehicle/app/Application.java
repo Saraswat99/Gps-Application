@@ -1,8 +1,10 @@
 package com.vehicle.app;
 
-import com.vehicle.app.entity.Device;
-import com.vehicle.app.repository.DeviceRepository;
-import com.vehicle.app.repository.RoleRepository;
+import com.vehicle.app.entity.Role;
+import com.vehicle.app.entity.User;
+import com.vehicle.app.enums.Roles;
+import com.vehicle.app.repository.UserRepository;
+import com.vehicle.app.service.RoleService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -15,8 +17,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Slf4j
 @EnableJpaAuditing
@@ -24,9 +26,11 @@ import java.util.Optional;
 public class Application implements CommandLineRunner {
 
     @Autowired
-    private DeviceRepository deviceRepository;
+    private RoleService roleService;
     @Autowired
-    private RoleRepository roleRepository;
+    private UserRepository userRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
@@ -35,8 +39,12 @@ public class Application implements CommandLineRunner {
     @Bean
     public AuditorAware<String> auditorProvider() {
         return () -> {
-            String userName = SecurityContextHolder.getContext().getAuthentication().getName();
-            return Optional.ofNullable(userName);
+            try {
+                String userName = SecurityContextHolder.getContext().getAuthentication().getName();
+                return Optional.ofNullable(userName);
+            } catch (Exception ex) {
+                return Optional.ofNullable("System Generated");
+            }
         };
     }
 
@@ -48,10 +56,28 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        List<Device> devices = deviceRepository.findAll();
-        log.info("Device list {}", devices.size());
-        devices.stream().forEach(emp -> {
-            log.info(emp.toString());
-        });
+        //createSuperAdmin();
+    }
+
+    private void createSuperAdmin() {
+        log.info("############## User Init Start #################");
+        User user = userRepository.findByUsername("superadmin");
+        if (user == null) {
+            user = new User();
+            user.setUsername("superadmin");
+            user.setActive(true);
+            user.setName("Super Admin");
+            user.setEmailId("superadmin@gmail.com");
+            user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
+            user.setPassword(passwordEncoder.encode("superadmin"));
+            Role role = roleService.findById(Roles.SUPERADMIN.getId());
+            user.setRoles(Set.of(role));
+            user.setLevel("superadmin");
+            userRepository.save(user);
+            log.info("Super admin created");
+        } else {
+            log.info("Super admin already exists");
+        }
+        log.info("############## User Init Stop #################");
     }
 }

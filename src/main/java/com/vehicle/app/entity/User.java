@@ -1,18 +1,22 @@
 package com.vehicle.app.entity;
 
+import com.vehicle.app.listner.UserListener;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
 @Entity
 @Table
+@EntityListeners(UserListener.class)
 public class User extends BaseEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -33,6 +37,37 @@ public class User extends BaseEntity implements UserDetails {
     private Set<Device> devices;
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
+    @Column(nullable = true, unique = true)
+    private String level;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_id")
+    private User parent;
+    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private List<User> childs=new ArrayList<>();
+
+    public String getLevel() {
+        return level;
+    }
+
+    public void setLevel(String level) {
+        this.level = level;
+    }
+
+    public User getParent() {
+        return parent;
+    }
+
+    public void setParent(User parent) {
+        this.parent = parent;
+    }
+
+    public List<User> getChilds() {
+        return childs;
+    }
+
+    public void setChilds(List<User> childs) {
+        this.childs = childs;
+    }
 
     public Set<Role> getRoles() {
         return roles;
@@ -132,4 +167,5 @@ public class User extends BaseEntity implements UserDetails {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
 }
