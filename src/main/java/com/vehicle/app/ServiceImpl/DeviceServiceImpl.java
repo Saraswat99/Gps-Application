@@ -26,8 +26,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     public List<Device> listAllDevices(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy = user.getUsername();
-        return deviceRepository.findAllByCreatedBy(createdBy);
+        return deviceRepository.findAllByLevelLike(user.getLevel() + "%");
     }
 
     public DeviceDTO saveDevice(DeviceDTO deviceDTO, Authentication authentication) {
@@ -36,6 +35,7 @@ public class DeviceServiceImpl implements DeviceService {
         final Long id = authUser.getId();
         User user = userRepository.findById(id).get();
         device.setUser(user);
+        device.setLevel(user.getLevel());
         Device savedDevice = deviceRepository.save(device);
         return DeviceDTO.convertToDTO(savedDevice);
     }
@@ -53,11 +53,22 @@ public class DeviceServiceImpl implements DeviceService {
 
     public void deleteById(Long id, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy = user.getUsername();
-        Device device = deviceRepository.findByIdAndCreatedBy(id, createdBy).orElseThrow(() -> new RuntimeException("Device doesn't exist"));
+        final Device device = deviceRepository.findByIdAndLevelLike(id, user.getLevel() + "%").orElseThrow(() -> new RuntimeException("Device does not exists"));
         if (device.isAssigned()) {
             throw new RuntimeException("Device already in use");
         }
         deviceRepository.deleteById(id);
+    }
+
+    @Override
+    public int activeDevice(boolean active, Long deviceId, Authentication authentication) {
+        Optional.ofNullable(deviceId).filter(di -> di > 0).orElseThrow(() -> new RuntimeException("Please provide device Id"));
+        User user = (User) authentication.getPrincipal();
+        String level = user.getLevel();
+        final Device device = deviceRepository.findByIdAndLevelLike(deviceId, user.getLevel() + "%").orElseThrow(() -> new RuntimeException("Device does not exists"));
+        if (!device.isAssigned()) {
+            return deviceRepository.update(deviceId, active, level);
+        }
+        return 0;
     }
 }

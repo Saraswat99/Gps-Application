@@ -22,14 +22,12 @@ public class VehicleDTO {
     private double lat;
     private double lng;
     private boolean active;
-
     private String vehicleType;
     private String vehicleStatus;
     private String createdBy;
     private String modifiedBy;
     private String added;
     private String updated;
-    private boolean assigned;
     private DeviceDTO deviceDTO;
     private Long deviceId;
 

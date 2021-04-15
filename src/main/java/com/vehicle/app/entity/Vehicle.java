@@ -19,7 +19,7 @@ public class Vehicle extends BaseEntity {
     private double lat;
     @Column
     private double lng;
-    @Column
+    @Column(nullable = false, name = "active", columnDefinition = "boolean default false")
     private boolean active;
     @Column
     private VehicleType vehicleType;
@@ -31,4 +31,6 @@ public class Vehicle extends BaseEntity {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
+    @Column(nullable = false)
+    private String level;
 }

@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userDetailsService)
                 .passwordEncoder(passwordEncoder)
-                .passwordEncoder(passwordEncoder).setBuilder(auth);
+                .setBuilder(auth);
     }
 
     @Bean
@@ -64,22 +64,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     public AuthenticationManager authenticationManager() throws Exception {
         return super.authenticationManager();
     }
-
-
-    
-   /* @Override
-    @Bean("inMemoryUserDetailsService")
-    public UserDetailsService userDetailsService() {
-        User user = new User();
-        user.setUsername("superadmin");
-        user.setActive(true);
-        user.setName("Super Admin");
-        user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
-        user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
-        user.setPassword(passwordEncoder.encode("superadmin"));
-        user.setLevel("superadmin");
-        return new InMemoryUserDetailsManagerV1(user);
-    }*/
 
     class InMemoryUserDetailsManagerV1 extends InMemoryUserDetailsManager {
 
@@ -105,4 +89,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
             }
         }
     }
+    
+   /* @Override
+    @Bean("inMemoryUserDetailsService")
+    public UserDetailsService userDetailsService() {
+        User user = new User();
+        user.setUsername("superadmin");
+        user.setActive(true);
+        user.setName("Super Admin");
+        user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
+        user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
+        user.setPassword(passwordEncoder.encode("superadmin"));
+        user.setLevel("superadmin");
+        return new InMemoryUserDetailsManagerV1(user);
+    }*/
 }

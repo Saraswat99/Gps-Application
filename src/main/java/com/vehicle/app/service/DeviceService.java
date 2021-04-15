@@ -15,4 +15,6 @@ public interface DeviceService {
     DeviceDTO updateDevice(DeviceDTO deviceDTO, Authentication authentication);
 
     void deleteById(Long id, Authentication authentication);
+
+    int activeDevice(boolean active, Long deviceId, Authentication authentication);
 }

@@ -36,7 +36,6 @@ public class DeviceDTO {
         device.setSimNumber(deviceDTO.getSimNumber());
         device.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
         device.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
-        device.setActive(deviceDTO.isActive());
         return device;
     }
 
@@ -62,6 +61,5 @@ public class DeviceDTO {
         existingDevice.setSimNumber(deviceDTO.getSimNumber());
         existingDevice.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
         existingDevice.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
-        existingDevice.setActive(deviceDTO.isActive());
     }
 }

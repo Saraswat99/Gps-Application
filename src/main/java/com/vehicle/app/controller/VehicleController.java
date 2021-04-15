@@ -40,14 +40,25 @@ public class VehicleController {
     }
 
     @GetMapping(value = "/list/{id}")
-    public ApiResponse<VehicleDTO> listVehicle(@PathVariable long id) {
-        Vehicle vehicle = vehicleService.getVehicleById(id);
+    public ApiResponse<VehicleDTO> listVehicle(@PathVariable long id,Authentication authentication) {
+        Vehicle vehicle = vehicleService.getVehicleById(id,authentication);
         return new ApiResponse<>(VehicleDTO.convertToVehicleDTO(vehicle));
     }
 
     @DeleteMapping(value = "/delete/{id}")
+    @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
     public ApiResponse<String> deleteVehicle(@PathVariable Long id, Authentication authentication) {
         vehicleService.deleteVehicle(id, authentication);
         return new ApiResponse<>("Vehicle successfully Deleted");
+    }
+
+    @PutMapping(value = "/{active}/{vehicleId}")
+    @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<String> activeVehicle(@PathVariable("active") boolean active, @PathVariable("vehicleId") Long vehicleId, Authentication authentication) {
+        int updateCount=vehicleService.activeVehicle(active, vehicleId, authentication);
+        if(updateCount>0){
+            return new ApiResponse<>("Vehicle Successfully Updated");
+        }
+        return new ApiResponse<>("Vehicle did not Updated");
     }
 }

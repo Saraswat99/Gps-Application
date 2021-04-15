@@ -7,7 +7,6 @@ import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.enums.Roles;
 import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.repository.DeviceRepository;
-import com.vehicle.app.repository.RoleRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.RoleService;
@@ -25,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @Data
 @Slf4j
@@ -38,10 +36,8 @@ public class UserServiceImpl implements UserService {
     private final DeviceRepository deviceRepository;
     private final VehicleRepository vehicleRepository;
 
-
     @PostConstruct
-    private void init(){
-
+    private void init() {
     }
 
     @Override
@@ -64,7 +60,7 @@ public class UserServiceImpl implements UserService {
         List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
         List<Device> devices = deviceRepository.findByUserId(userId);
         UserDTO userDTO = UserDTO.convertToDTO(user);
-        List<String> imeiSimNum = devices.stream().map(device ->  device.getImei() ).collect(Collectors.toList());
+        List<String> imeiSimNum = devices.stream().map(device -> device.getImei()).collect(Collectors.toList());
         List<String> vehicleNumber = vehicles.stream().map(vehicle -> vehicle.getNumber()).collect(Collectors.toList());
         userDTO.setVehicleNumber(vehicleNumber);
         userDTO.setImeiSimNum(imeiSimNum);

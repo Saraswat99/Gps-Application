@@ -3,6 +3,7 @@ package com.vehicle.app.ServiceImpl;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
+import com.vehicle.app.enums.ApiConstant;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
@@ -30,11 +31,12 @@ public class VehicleServiceImpl implements VehicleService {
         final Long deviceId = vehicleDTO.getDeviceId();
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
-        Optional.ofNullable(deviceId).filter(dId -> dId > 0).orElseThrow(() -> new RuntimeException("Please enter device Id"));
-        Device device = deviceRepository.findByIdAndAssignedAndCreatedBy(deviceId,false, createdBy).orElseThrow(() -> new RuntimeException("Device doesn't exist or already asigned"));
+        Optional.ofNullable(deviceId).filter(dId -> dId > 0).orElseThrow(() -> new RuntimeException(ApiConstant.PROVIDE_DEVICE_ID));
+        Device device = deviceRepository.findByIdAndAssignedAndCreatedByAndActive(deviceId, false, createdBy, true).orElseThrow(() -> new RuntimeException("Device doesn't exist or already assigned or not active"));
         device.setAssigned(true);
         Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
         vehicle.setUser(user);
+        vehicle.setLevel(user.getLevel());
         vehicle.setDevice(device);
         vehicle = vehicleRepository.save(vehicle);
         return VehicleDTO.convertToVehicleDTO(vehicle);
@@ -52,8 +54,10 @@ public class VehicleServiceImpl implements VehicleService {
         final Device existingDevice = existingVehicle.getDevice();
         if (device.getId() != existingDevice.getId()) {
             if (device.isAssigned()) throw new RuntimeException("Device already assigned");
+            if (!device.isActive()) throw new RuntimeException("Device is not active");
             device.setAssigned(true);
             existingDevice.setAssigned(false);
+            existingVehicle.setDevice(device);
         }
         VehicleDTO.convertToExistingVehicle(existingVehicle, vehicleDTO);
         existingVehicle = vehicleRepository.save(existingVehicle);
@@ -63,23 +67,30 @@ public class VehicleServiceImpl implements VehicleService {
     @Override
     public List<Vehicle> listVehicleList(Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy = user.getUsername();
-        return vehicleRepository.findAllByCreatedBy(createdBy);
+        return vehicleRepository.findAllByLevelLike("%" + user.getLevel() + "%");
     }
 
     @Override
-    public Vehicle getVehicleById(Long vehicleId) {
+    public Vehicle getVehicleById(Long vehicleId, Authentication authentication) {
         Optional.ofNullable(vehicleId).filter(vi -> vi > 0).orElseThrow(() -> new RuntimeException("Please provide vehicle Id"));
-        return vehicleRepository.findById(vehicleId).get();
+        User user = (User) authentication.getPrincipal();
+        return vehicleRepository.findByIdAndLevelLike(vehicleId, user.getLevel() + "%").get();
     }
 
     @Override
     public void deleteVehicle(Long vehicleId, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final String createdBy = user.getUsername();
-        final Vehicle existingVehicle = vehicleRepository.findByIdAndCreatedBy(vehicleId, createdBy).orElseThrow(() -> new RuntimeException("Vehicle does not exists"));
+        final Vehicle existingVehicle = vehicleRepository.findByIdAndLevelLike(vehicleId, "%" + user.getLevel() + "%").orElseThrow(() -> new RuntimeException("Vehicle does not exists"));
         final Device device = existingVehicle.getDevice();
         device.setAssigned(false);
         vehicleRepository.deleteById(vehicleId);
+    }
+
+    @Override
+    public int activeVehicle(boolean active, Long vehicleId, Authentication authentication) {
+        Optional.ofNullable(vehicleId).filter(vi -> vi > 0).orElseThrow(() -> new RuntimeException("Please provide vehicle Id"));
+        User user = (User) authentication.getPrincipal();
+        String level = user.getLevel();
+        return vehicleRepository.update(vehicleId, active, level);
     }
 }

@@ -33,17 +33,17 @@ public class User extends BaseEntity implements UserDetails {
     private boolean active;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    //@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Device> devices;
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
-    @Column(nullable = true, unique = true)
+    @Column(nullable = false, unique = true)
     private String level;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private User parent;
     @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<User> childs=new ArrayList<>();
+    private List<User> childs = new ArrayList<>();
 
     public String getLevel() {
         return level;
@@ -71,6 +71,10 @@ public class User extends BaseEntity implements UserDetails {
 
     public Set<Role> getRoles() {
         return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
     }
 
     public Set<Device> getDevices() {
@@ -163,9 +167,4 @@ public class User extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return active;
     }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
 }

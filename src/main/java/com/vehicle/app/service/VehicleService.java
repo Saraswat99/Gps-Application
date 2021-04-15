@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle getVehicleById(Long vehicleId);
+    Vehicle getVehicleById(Long vehicleId,Authentication authentication);
 
     VehicleDTO saveVehicle(VehicleDTO vehicleDTO, Authentication authentication);
 
@@ -17,4 +17,6 @@ public interface VehicleService {
     VehicleDTO updateVehicle(VehicleDTO vehicleDTO, Authentication authentication);
 
     void deleteVehicle(Long id, Authentication authentication);
+
+    int activeVehicle(boolean active, Long vehicleId, Authentication authentication);
 }

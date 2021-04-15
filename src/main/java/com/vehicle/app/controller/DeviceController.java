@@ -43,8 +43,20 @@ public class DeviceController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
     public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
         deviceService.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");
+    }
+
+    @PutMapping(value = "/{active}/{deviceId}")
+    @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
+    public ApiResponse<String> activeDevice(@PathVariable("active") boolean active, @PathVariable("deviceId") Long deviceId, Authentication authentication) {
+        int updateCount=deviceService.activeDevice(active, deviceId, authentication);
+        if(updateCount>0){
+            return new ApiResponse<>("Device Successfully Updated");
+        }
+        return new ApiResponse<>("Device did not Updated");
+
     }
 }
