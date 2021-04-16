@@ -16,6 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
+import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
 
 import java.util.Optional;
 import java.util.Set;
@@ -54,9 +56,23 @@ public class Application implements CommandLineRunner {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public TilesViewResolver viewResolver() {
+        TilesViewResolver viewResolver = new TilesViewResolver();
+        return viewResolver;
+    }
+
+    @Bean
+    public TilesConfigurer tilesConfigurer() {
+        TilesConfigurer tilesConfigurer = new TilesConfigurer();
+        tilesConfigurer.setDefinitions("classpath:tiles-def.xml");
+        tilesConfigurer.setCheckRefresh(true);
+        return tilesConfigurer;
+    }
+
     @Override
     public void run(String... args) throws Exception {
-        createSuperAdmin();
+        //createSuperAdmin();
     }
 
     private void createSuperAdmin() {

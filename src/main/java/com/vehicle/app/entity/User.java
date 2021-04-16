@@ -33,7 +33,7 @@ public class User extends BaseEntity implements UserDetails {
     private boolean active;
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Vehicle> vehicles;
-    //@OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Device> devices;
     @ManyToMany(fetch = FetchType.LAZY)
     private Set<Role> roles;
