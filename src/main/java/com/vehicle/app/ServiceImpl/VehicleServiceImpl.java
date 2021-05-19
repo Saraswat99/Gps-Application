@@ -34,6 +34,7 @@ public class VehicleServiceImpl implements VehicleService {
         Optional.ofNullable(deviceId).filter(dId -> dId > 0).orElseThrow(() -> new RuntimeException(ApiConstant.PROVIDE_DEVICE_ID));
         Device device = deviceRepository.findByIdAndAssignedAndCreatedByAndActive(deviceId, false, createdBy, true).orElseThrow(() -> new RuntimeException("Device doesn't exist or already assigned or not active"));
         device.setAssigned(true);
+        deviceRepository.save(device);
         Vehicle vehicle = VehicleDTO.convertToVehicle(vehicleDTO);
         vehicle.setUser(user);
         vehicle.setLevel(user.getLevel());
@@ -58,6 +59,8 @@ public class VehicleServiceImpl implements VehicleService {
             device.setAssigned(true);
             existingDevice.setAssigned(false);
             existingVehicle.setDevice(device);
+            deviceRepository.save(device);
+            deviceRepository.save(existingDevice);
         }
         VehicleDTO.convertToExistingVehicle(existingVehicle, vehicleDTO);
         existingVehicle = vehicleRepository.save(existingVehicle);

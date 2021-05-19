@@ -8,9 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class RootController {
 
-
-    @RequestMapping("/")
-    public String getIndexView(){
+  /*  @RequestMapping("/")
+    public String getIndexView() {
         return "index";
+    }
+*/
+    @RequestMapping("/")
+    public String getVehicleDetails() {
+        return "vehicle";
+    }
+
+    @RequestMapping("/device")
+    public String getDeviceDetails() {
+        return "device";
     }
 }

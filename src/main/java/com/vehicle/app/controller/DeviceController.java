@@ -42,7 +42,7 @@ public class DeviceController {
         return new ApiResponse<>(deviceService.updateDevice(deviceDTO, authentication));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{id}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
     public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
         deviceService.deleteById(id, authentication);

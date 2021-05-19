@@ -4,21 +4,23 @@
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
 <tiles-definitions>	
 	<!--  ##################################################################################################-->
-	<!--  ###################################### THEAME LAYOUT START #######################################-->
+	<!--  ###################################### THEME LAYOUT START #######################################-->
 	<!--  ##################################################################################################-->
 	
 
 	
-	<definition name="index" template="/WEB-INF/templates/index.jsp"></definition>
+	<definition name="vehicle" template="/WEB-INF/templates/vehicle/vehicle.jsp"></definition>
+	<definition name="device" template="/WEB-INF/templates/device/device.jsp"></definition>
 
-	<definition name="404" template="/WEB-INF/templeates/error/404.jsp"></definition>
+
+	<!--<definition name="404" template="/WEB-INF/templeates/error/404.jsp"></definition>
 
 	<definition name="400" template="/WEB-INF/templeates/error/400.jsp"></definition>
 	
 	<definition name="500" template="/WEB-INF/templeates/error/500.jsp"></definition>
 	
 	<definition name="401" template="/WEB-INF/templeates/error/401.jsp"></definition>
-
+-->
 	<!-- Layout Starts -->
 	<definition name="trackobitBaseLayout" template="/WEB-INF/templeates/layout/layout.jsp">
 		<put-attribute name="title" value="Dashboard" />
