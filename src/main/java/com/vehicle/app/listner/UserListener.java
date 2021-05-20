@@ -11,7 +11,7 @@ import javax.persistence.PrePersist;
 @Component
 public class UserListener {
 
-    @PrePersist
+   // @PrePersist
     public void logNewUserAttempt(User user) {
         log.info("###########################################################");
         log.info("Attempting to add new user with username: " + user.getUsername());
@@ -19,10 +19,10 @@ public class UserListener {
         log.info("###########################################################");
     }
 
-    @PostPersist
+   /* @PostPersist
     public void logNewUserAdded(User user) {
         log.info("###########################################################");
         log.info("Added user '" + user.getUsername() + "' with ID: " + user.getId());
         log.info("###########################################################");
-    }
+    }*/
 }

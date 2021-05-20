@@ -72,7 +72,7 @@ public class Application implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //createSuperAdmin();
+        createSuperAdmin();
     }
 
     private void createSuperAdmin() {
