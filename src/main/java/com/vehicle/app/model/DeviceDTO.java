@@ -16,7 +16,7 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeviceDTO {
 
-    private Long id;
+    private String id;
     private String imei;
     private String simOperator;
     private String deviceType;
@@ -27,7 +27,7 @@ public class DeviceDTO {
     private String modifiedBy;
     private String added;
     private String updated;
-    private Long userId;
+    private String userId;
     private User user;
 
     public static Device convertToDevice(DeviceDTO deviceDTO) {

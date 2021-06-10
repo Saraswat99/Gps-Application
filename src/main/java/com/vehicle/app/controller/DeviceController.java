@@ -24,16 +24,16 @@ public class DeviceController {
     @Autowired
     private DeviceService deviceService;
 
-    @GetMapping(value = "/list")
-    public ApiResponse<List<DeviceDTO>> listAllDevices(Authentication authentication) {
-        List<Device> deviceList = deviceService.listAllDevices(authentication);
-        return new ApiResponse<>(deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList()));
-    }
-
     @PostMapping("/save")
     @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
     public ApiResponse<DeviceDTO> saveDevice(@RequestBody DeviceDTO deviceDTO, Authentication authentication) {
         return new ApiResponse<>(deviceService.saveDevice(deviceDTO, authentication));
+    }
+
+    @GetMapping(value = "/list")
+    public ApiResponse<List<DeviceDTO>> listAllDevices(Authentication authentication) {
+        List<Device> deviceList = deviceService.listAllDevices(authentication);
+        return new ApiResponse<>(deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList()));
     }
 
     @PutMapping(value = "/update")
@@ -44,19 +44,18 @@ public class DeviceController {
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/delete/{id}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
+    public ApiResponse<String> deleteDevice(@PathVariable String id, Authentication authentication) {
         deviceService.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");
     }
 
     @PutMapping(value = "/{active}/{deviceId}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> activeDevice(@PathVariable("active") boolean active, @PathVariable("deviceId") Long deviceId, Authentication authentication) {
-        int updateCount=deviceService.activeDevice(active, deviceId, authentication);
-        if(updateCount>0){
+    public ApiResponse<String> activeDevice(@PathVariable("active") boolean active, @PathVariable("deviceId") String deviceId, Authentication authentication) {
+        Long updateCount = deviceService.activeDevice(active, deviceId, authentication);
+        if (updateCount > 0) {
             return new ApiResponse<>("Device Successfully Updated");
         }
         return new ApiResponse<>("Device did not Updated");
-
     }
 }

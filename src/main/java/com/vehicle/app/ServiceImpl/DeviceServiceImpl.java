@@ -1,7 +1,9 @@
 package com.vehicle.app.ServiceImpl;
 
+import com.mongodb.client.result.UpdateResult;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.entity.User;
+import com.vehicle.app.enums.ApiConstant;
 import com.vehicle.app.model.DeviceDTO;
 import com.vehicle.app.repository.DeviceRepository;
 import com.vehicle.app.repository.UserRepository;
@@ -9,6 +11,10 @@ import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.DeviceService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -23,52 +29,62 @@ public class DeviceServiceImpl implements DeviceService {
     private final UserRepository userRepository;
     private final DeviceRepository deviceRepository;
     private final VehicleRepository vehicleRepository;
-
-    public List<Device> listAllDevices(Authentication authentication) {
-        final User user = (User) authentication.getPrincipal();
-        return deviceRepository.findAllByLevelLike(user.getLevel() + "%");
-    }
+    private final MongoTemplate mongoTemplate;
 
     public DeviceDTO saveDevice(DeviceDTO deviceDTO, Authentication authentication) {
         Device device = DeviceDTO.convertToDevice(deviceDTO);
         User authUser = (User) authentication.getPrincipal();
-        final Long id = authUser.getId();
-        User user = userRepository.findById(id).get();
+        final String id = authUser.getId();
+        User user = mongoTemplate.findById(id, User.class);
         device.setUser(user);
         device.setLevel(user.getLevel());
-        Device savedDevice = deviceRepository.save(device);
+        Device savedDevice = mongoTemplate.save(device);
         return DeviceDTO.convertToDTO(savedDevice);
     }
 
+    public List<Device> listAllDevices(Authentication authentication) {
+        final User user = (User) authentication.getPrincipal();
+        // return deviceRepository.findAllByLevelLike(user.getLevel());
+        Query query = new Query();
+        query.addCriteria(Criteria.where("level").regex("^" + user.getLevel()));
+        return mongoTemplate.find(query, Device.class);
+    }
+
     public DeviceDTO updateDevice(DeviceDTO deviceDTO, Authentication authentication) {
-        final Long id = deviceDTO.getId();
+        final String id = deviceDTO.getId();
         final User user = (User) authentication.getPrincipal();
         final String createdBy = user.getUsername();
-        Optional.ofNullable(id).filter(dev -> dev > 0).orElseThrow(() -> new RuntimeException("Please provide device id"));
-        Device existingDevice = deviceRepository.findByIdAndCreatedBy(id, createdBy).orElseThrow(() -> new RuntimeException("Device doesn't exist"));
+        Optional.ofNullable(id).filter(dev -> !dev.isEmpty()).orElseThrow(() -> new RuntimeException(ApiConstant.PROVIDE_DEVICE_ID));
+        Device existingDevice = deviceRepository.findByIdAndCreatedBy(id, createdBy).orElseThrow(() -> new RuntimeException(ApiConstant.DEVICE_DOES_NOT_EXIST));
         DeviceDTO.convertToExistingDevice(existingDevice, deviceDTO);
-        existingDevice = deviceRepository.save(existingDevice);
+        existingDevice = mongoTemplate.save(existingDevice);
         return DeviceDTO.convertToDTO(existingDevice);
     }
 
-    public void deleteById(Long id, Authentication authentication) {
+    public void deleteById(String id, Authentication authentication) {
         final User user = (User) authentication.getPrincipal();
-        final Device device = deviceRepository.findByIdAndLevelLike(id, user.getLevel() + "%").orElseThrow(() -> new RuntimeException("Device does not exists"));
+        final Device device = deviceRepository.findByIdAndLevelLike(id, user.getLevel()).orElseThrow(() -> new RuntimeException(ApiConstant.DEVICE_DOES_NOT_EXIST));
         if (device.isAssigned()) {
-            throw new RuntimeException("Device already in use");
+            throw new RuntimeException(ApiConstant.DEVICE_ALREADY_ASSIGNED);
         }
-        deviceRepository.deleteById(id);
+        mongoTemplate.remove(device);
     }
 
     @Override
-    public int activeDevice(boolean active, Long deviceId, Authentication authentication) {
-        Optional.ofNullable(deviceId).filter(di -> di > 0).orElseThrow(() -> new RuntimeException("Please provide device Id"));
+    public Long activeDevice(boolean active, String deviceId, Authentication authentication) {
+        Optional.ofNullable(deviceId).filter(di -> !di.isEmpty()).orElseThrow(() -> new RuntimeException(ApiConstant.PROVIDE_DEVICE_ID));
         User user = (User) authentication.getPrincipal();
         String level = user.getLevel();
-        final Device device = deviceRepository.findByIdAndLevelLike(deviceId, user.getLevel() + "%").orElseThrow(() -> new RuntimeException("Device does not exists"));
+        final Device device = deviceRepository.findByIdAndLevelLike(deviceId, user.getLevel()).orElseThrow(() -> new RuntimeException(ApiConstant.DEVICE_DOES_NOT_EXIST));
         if (!device.isAssigned()) {
-            return deviceRepository.update(deviceId, active, level);
+            Query query = new Query();
+            query.addCriteria(Criteria.where("id").is(deviceId).and("level").regex(level + "/"));
+            Update update = new Update();
+            update.set("active", active);
+            UpdateResult device1 = mongoTemplate.updateFirst(query, update, Device.class);
+            log.info(device1.getModifiedCount() + "");
+            return device1.getModifiedCount();
         }
-        return 0;
+        return 0L;
     }
 }

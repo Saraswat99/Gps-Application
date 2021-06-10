@@ -2,31 +2,29 @@ package com.vehicle.app.entity;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.persistence.*;
 import java.util.List;
 
 @Getter
 @Setter
-@Entity
-@Table(name = "role")
+@Document(collection = "role")
 public class Role {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-    @Column(unique = true, nullable = false)
+    private String id;
+    @Indexed(unique = true)
     private String name;
-    @Column
     private boolean isDefault;
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @DBRef
     private List<User> users;
-
     public Role() {
     }
 
-    public Role(Long id, String name, boolean isDefault) {
-        this.id = id;
+    public Role(String name, boolean isDefault) {
         this.name = name;
         this.isDefault = isDefault;
     }

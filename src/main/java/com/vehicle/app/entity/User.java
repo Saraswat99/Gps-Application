@@ -1,12 +1,14 @@
 package com.vehicle.app.entity;
 
-import com.vehicle.app.listner.UserListener;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,35 +16,28 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Entity
-@Table
-@EntityListeners(UserListener.class)
+@Data
+@Document
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(nullable = false)
     private String name;
-    @Column(nullable = false)
     private String roleAlisa;
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String username;
-    @Column
     private String password;
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String emailId;
-    @Column
     private boolean active;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @DBRef
     private Set<Vehicle> vehicles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @DBRef
     private Set<Device> devices;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @DBRef
     private Set<Role> roles;
-    @Column(nullable = false, unique = true)
     private String level;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @DBRef
     private User parent;
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @DBRef
     private List<User> childs = new ArrayList<>();
 
     public String getLevel() {

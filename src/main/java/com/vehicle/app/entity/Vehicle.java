@@ -1,36 +1,29 @@
 package com.vehicle.app.entity;
 
+
 import com.vehicle.app.enums.VehicleStatus;
 import com.vehicle.app.enums.VehicleType;
 import lombok.Getter;
 import lombok.Setter;
-
-import javax.persistence.*;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 @Setter
 @Getter
-@Entity
-@Table
+@Document
 public class Vehicle extends BaseEntity {
 
-    @Column(unique = true)
+    @Indexed(unique = true)
     private String number;
-    @Column
     private double lat;
-    @Column
     private double lng;
-    @Column(nullable = false, name = "active", columnDefinition = "boolean default false")
     private boolean active;
-    @Column
     private VehicleType vehicleType;
-    @Column
     private VehicleStatus vehicleStatus;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_id", nullable = true)
+    @DBRef
     private Device device;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @DBRef
     private User user;
-    @Column(nullable = false)
     private String level;
 }

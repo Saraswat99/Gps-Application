@@ -5,9 +5,10 @@ function ajaxGetCallApi(url, data) {
         success: function (vehicles) {
         },
         error: function () {
-            alert('error');
+            alert('error!');
         }
-    });
+    })
+
 }
 
 function ajaxPostCallApi(url, data) {
@@ -20,7 +21,7 @@ function ajaxPostCallApi(url, data) {
         success: function () {
         },
         error: function () {
-            alert("error");
+            alert("error!");
         }
     });
 }
@@ -35,7 +36,7 @@ function ajaxPutCallApi(url, data) {
         success: function () {
         },
         error: function () {
-            alert("error");
+            alert("error!");
         }
     });
 }
@@ -47,7 +48,7 @@ function ajaxActivateCallApi(url, data) {
         success: function () {
         },
         error: function () {
-            alert("error");
+            alert("error!");
         }
     });
 }
@@ -59,7 +60,7 @@ function ajaxDeleteCallApi(url, data) {
         success: function () {
         },
         error: function () {
-            alert("error");
+            alert("error!");
         }
     });
 }

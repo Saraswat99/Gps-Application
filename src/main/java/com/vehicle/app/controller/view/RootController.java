@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 public class RootController {
 
-  /*  @RequestMapping("/")
+    @RequestMapping("/")
     public String getIndexView() {
         return "index";
     }
-*/
-    @RequestMapping("/")
+
+    @RequestMapping("/vehicle")
     public String getVehicleDetails() {
         return "vehicle";
     }
@@ -21,5 +21,10 @@ public class RootController {
     @RequestMapping("/device")
     public String getDeviceDetails() {
         return "device";
+    }
+
+    @RequestMapping("/map")
+    public String getMapDetails() {
+        return "map";
     }
 }

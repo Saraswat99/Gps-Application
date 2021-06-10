@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 user.setActive(true);
                 user.setName("Super Admin");
                 user.setRoleAlisa(Roles.SUPERADMIN.getAlisa());
-                user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.getId(), Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
+                user.setRoles(Stream.of(new Role(Roles.SUPERADMIN.name(), true)).collect(Collectors.toSet()));
                 user.setPassword(passwordEncoder.encode("superadmin"));
                 user.setLevel("superadmin");
                 return user;

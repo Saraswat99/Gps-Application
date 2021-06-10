@@ -34,7 +34,7 @@ public class SuperAdminController {
     }
 
     @GetMapping(value = "/listAdmin/{userId}")
-    public ApiResponse<UserDTO> list(@PathVariable Long userId) {
+    public ApiResponse<UserDTO> list(@PathVariable String userId) {
         return new ApiResponse<>(userService.list(userId));
     }
 
@@ -44,7 +44,7 @@ public class SuperAdminController {
     }
 
     @DeleteMapping(value = "/deleteAdmin/{id}")
-    public ApiResponse<String> delete(@PathVariable Long id) {
+    public ApiResponse<String> delete(@PathVariable String id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }

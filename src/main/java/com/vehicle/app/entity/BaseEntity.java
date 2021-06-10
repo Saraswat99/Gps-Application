@@ -1,35 +1,26 @@
 package com.vehicle.app.entity;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedBy;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import lombok.ToString;
+import org.springframework.data.annotation.*;
 
-import javax.persistence.*;
 import java.util.Date;
 
 @Setter
 @Getter
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
+@ToString
 public class BaseEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    protected Long id;
+    protected String id;
     @CreatedBy
     protected String createdBy;
     @LastModifiedBy
     protected String modifiedBy;
     @CreatedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "added", columnDefinition = "DATETIME", nullable = false, updatable = false)
     protected Date added;
     @LastModifiedDate
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "updated", columnDefinition = "DATETIME", nullable = false)
     protected Date updated;
 }

@@ -10,7 +10,7 @@ $(document).ready(function () {
                 title: "Id", "data": "id",
                 "class": "edit-device-data",
                 'render': function (id) {
-                    return '<a data-toggle="modal" data-target="#updateModal" href=' + id + '>' + id + '</a>';
+                    return '<a data-toggle="modal" data-target="#update-modal" href=' + id + '>' + id + '</a>';
                 }
             },
             {title: "IMEI", "data": "imei"},
@@ -24,7 +24,7 @@ $(document).ready(function () {
                 title: "Delete",
                 "class": "delete-device",
                 'render': function () {
-                    return '<a href="#"><img src="/gps/resources/img/delete.png"></a>';
+                    return '<a href="#"><img src="/gps/resources/images/img/delete.png"></a>';
                 }
             },
             {
@@ -42,14 +42,13 @@ $(document).ready(function () {
     }
 
 
+    var deviceData;
     $('#device-table').on('click', ".edit-device-data a", function () {
-        var device = deviceTable.row($(this).parents('tr')).data();
-        $("#deviceId").val(device.id);
-        $("#uimei").val(device.imei);
-        $("#usimOperator").val(device.simOperator);
-        $("#udeviceType").val(device.deviceType);
-        $("#usimNumber").val(device.simNumber);
-
+        deviceData = deviceTable.row($(this).parents('tr')).data();
+        $("#update-imei").val(deviceData.imei);
+        $("#update-simOperator").val(deviceData.simOperator);
+        $("#update-deviceType").val(deviceData.deviceType);
+        $("#update-simNumber").val(deviceData.simNumber);
     })
 
     //########################################  GET API ###########################################
@@ -60,10 +59,10 @@ $(document).ready(function () {
     //########################################  POST API ###########################################
     $('#create').on('click', function () {
         var device = {
-            "imei": $("#imei").val(),
-            "simOperator": $("#simOperator").val(),
-            "deviceType": $("#deviceType").val(),
-            "simNumber": $("#simNumber").val(),
+            "imei": $("#create-imei").val(),
+            "simOperator": $("#create-simOperator").val(),
+            "deviceType": $("#create-deviceType").val(),
+            "simNumber": $("#create-simNumber").val(),
         }
         ajaxPostCallApi('/gps/device/save', device).then(function (devices) {
             deviceTable.row.add(devices.data).draw();
@@ -74,11 +73,11 @@ $(document).ready(function () {
     $('#update').on('click', function () {
         var index = deviceTable.row(this).index();
         var device = {
-            "id": $("#deviceId").val(),
-            "imei": $("#uimei").val(),
-            "simOperator": $("#usimOperator").val(),
-            "deviceType": $("#udeviceType").val(),
-            "simNumber": $("#usimNumber").val()
+            "id": deviceData.id,
+            "imei": $("#update-imei").val(),
+            "simOperator": $("#update-simOperator").val(),
+            "deviceType": $("#update-deviceType").val(),
+            "simNumber": $("#update-simNumber").val()
         }
         ajaxPutCallApi('/gps/device/update', device).then(function (devices) {
             deviceTable.row(index).data(devices.data).draw();
@@ -102,7 +101,6 @@ $(document).ready(function () {
     $('#device-table').on('click', '.activate-device', function () {
         var row = $(this).parents('tr');
         var rowData = deviceTable.row(row).data();
-        console.log(rowData);
         var deviceId = rowData.id;
         var active = rowData.active;
         if (active)

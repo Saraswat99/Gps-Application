@@ -1,6 +1,5 @@
 $(document).ready(function () {
     $('.js-example-basic-single').select2();
-    console.log($);
     var vehicleTable = $('#vehicle-table').DataTable({
         columns: createTable()
     });
@@ -24,7 +23,7 @@ $(document).ready(function () {
                 title: "Delete",
                 "class": "delete-vehicle",
                 'render': function () {
-                    return '<a href="#"><img  src="/gps/resources/img/delete.png"></a>';
+                    return '<a href="#"><img  src="/gps/resources/images/img/delete.png"></a>';
                 }
             }, {
                 title: "Activate",
@@ -40,12 +39,12 @@ $(document).ready(function () {
         return tableArray;
     }
 
+    var vehicleData;
     $('#vehicle-table').on('click', ".edit-vehicle-data a", function () {
-        var vehicle = vehicleTable.row($(this).parents('tr')).data();
-        $("#vehicleId").val(vehicle.id);
-        $("#number1").val(vehicle.number);
-        $("#vehicleType1").val(vehicle.vehicleType);
-        $("#deviceId1").val(vehicle.deviceDTO.id);
+        vehicleData = vehicleTable.row($(this).parents('tr')).data();
+        $("#number1").val(vehicleData.number);
+        $("#vehicleType1").val(vehicleData.vehicleType);
+        $("#deviceId1").val(vehicleData.deviceDTO.id);
     })
 
     //########################################  GET API ###########################################
@@ -72,7 +71,7 @@ $(document).ready(function () {
     $('#update').on('click', function () {
         var index = vehicleTable.row(this).index();
         var vehicle = {
-            "id": $("#vehicleId").val(),
+            "id": vehicleData.id,
             "number": $("#number1").val(),
             "vehicleType": $("#vehicleType1").val(),
             "deviceId": $("#deviceId1").val()
@@ -84,8 +83,8 @@ $(document).ready(function () {
 
     //########################################  DELETE API ###########################################
     $('#vehicle-table').on('click', '.delete-vehicle', function () {
-        var remove = confirm("Are you sure you wish to remove this Device?");
-        if(remove){
+        var remove = confirm("Are you sure you wish to remove this Vehicle?");
+        if (remove) {
             var row = $(this).parents('tr');
             var rowData = vehicleTable.row(row).data();
             var vehicleId = rowData.id;

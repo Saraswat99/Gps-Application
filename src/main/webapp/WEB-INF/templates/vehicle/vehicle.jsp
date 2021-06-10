@@ -34,7 +34,8 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="vehicleType">Vehicle Type:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="vehicleType" name="Vehicle Type">
+                            <select class="js-example-basic-single" style="width: 100%" id="vehicleType"
+                                    name="Vehicle Type">
                                 <option value="TRUCK">TRUCK</option>
                                 <option value="BUS">BUS</option>
                                 <option value="CAR">CAR</option>
@@ -47,7 +48,8 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="vehicleStatus">Vehicle Status:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="vehicleStatus" name="Vehicle Status">
+                            <select class="js-example-basic-single" style="width: 100%" id="vehicleStatus"
+                                    name="Vehicle Status">
                                 <option value="OVERSPEED">OVERSPEED</option>
                                 <option value="RUNNING">RUNNING</option>
                                 <option value="IDLE">IDLE</option>
@@ -73,7 +75,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="deviceId">Device Id:</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="deviceId" placeholder="Enter Device Id">
+                            <input type="text" class="form-control" id="deviceId" placeholder="Enter Device Id">
                         </div>
                     </div>
 
@@ -105,12 +107,12 @@
 
             <div class="modal-body">
                 <form class="form-horizontal" id="updateVehicleForm">
-                    <div class="form-group">
+                    <%--<div class="form-group">
                         <label class="control-label col-sm-2" for="vehicleId">Vehicle Id:</label>
                         <div class="col-sm-10">
                             <input type="number" class="form-control" id="vehicleId" placeholder="Enter Vehicle Id">
                         </div>
-                    </div>
+                    </div>--%>
 
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="number1">Vehicle Number:</label>
@@ -124,7 +126,8 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="vehicleType1">Vehicle Type:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="vehicleType1" name="Vehicle Type">
+                            <select class="js-example-basic-single" style="width: 100%" id="vehicleType1"
+                                    name="Vehicle Type">
                                 <option value="TRUCK">TRUCK</option>
                                 <option value="BUS">BUS</option>
                                 <option value="CAR">CAR</option>
@@ -136,7 +139,7 @@
                     <div class="form-group">
                         <label class="control-label col-sm-2" for="deviceId1">Device Id:</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="deviceId1" placeholder="Enter Device Id">
+                            <input type="text" class="form-control" id="deviceId1" placeholder="Enter Device Id">
                         </div>
                     </div>
 

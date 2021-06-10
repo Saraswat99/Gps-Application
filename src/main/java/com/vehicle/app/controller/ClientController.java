@@ -34,7 +34,7 @@ public class ClientController {
     }
 
     @GetMapping(value = "/listTransporter/{userId}")
-    public ApiResponse<UserDTO> listTransporter(@PathVariable Long userId) {
+    public ApiResponse<UserDTO> listTransporter(@PathVariable String userId) {
         return new ApiResponse<>(userService.list(userId));
     }
 
@@ -44,7 +44,7 @@ public class ClientController {
     }
 
     @DeleteMapping(value = "/deleteTransporter/{id}")
-    public ApiResponse<String> deleteTransporter(@PathVariable Long id) {
+    public ApiResponse<String> deleteTransporter(@PathVariable String id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }

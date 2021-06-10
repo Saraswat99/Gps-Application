@@ -4,6 +4,7 @@ import com.vehicle.app.entity.Device;
 import com.vehicle.app.entity.Role;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
+import com.vehicle.app.enums.ApiConstant;
 import com.vehicle.app.enums.Roles;
 import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.repository.DeviceRepository;
@@ -47,7 +48,7 @@ public class UserServiceImpl implements UserService {
         user.setParent(parent);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Roles roles = Roles.getChildRole(parent.getRoleAlisa());
-        Role childRole = roleService.findById(roles.getId());
+        Role childRole = roleService.findByName(roles.name());
         user.setRoles(Set.of(childRole));
         user.setRoleAlisa(roles.getAlisa());
         user = userRepository.save(user);
@@ -55,7 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO list(Long userId) {
+    public UserDTO list(String userId) {
         User user = userRepository.findById(userId).get();
         List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
         List<Device> devices = deviceRepository.findByUserId(userId);
@@ -75,9 +76,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(Authentication authentication, UserDTO userDTO) {
-        Long userId = userDTO.getId();
-        Optional.ofNullable(userId).filter(ui -> ui > 0).orElseThrow(() -> new RuntimeException("Please provide User Id"));
-        User existingUser = userRepository.findByIdAndCreatedBy(userId, authentication.getName()).orElseThrow(() -> new RuntimeException("User does not exist"));
+        String userId = userDTO.getId();
+        Optional.ofNullable(userId).filter(ui -> !ui.isEmpty()).orElseThrow(() -> new RuntimeException(ApiConstant.PROVIDE_USER_ID));
+        User existingUser = userRepository.findByIdAndCreatedBy(userId, authentication.getName()).orElseThrow(() -> new RuntimeException(ApiConstant.USER_DOES_NOT_EXIST));
         UserDTO.convertToExisitingUser(existingUser, userDTO);
         existingUser = userRepository.save(existingUser);
         return UserDTO.convertToDTO(existingUser);
@@ -88,8 +89,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void delete(Long id) {
-        userRepository.findById(id).orElseThrow(() -> new RuntimeException("No User Found"));
+    public void delete(String id) {
+        userRepository.findById(id).orElseThrow(() -> new RuntimeException(ApiConstant.NO_USER_FOUND));
         userRepository.deleteById(id);
     }
 
@@ -97,7 +98,7 @@ public class UserServiceImpl implements UserService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new UsernameNotFoundException("User does not exists  " + username);
+            throw new UsernameNotFoundException(ApiConstant.USER_DOES_NOT_EXIST + username);
         }
         return user;
     }

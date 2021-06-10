@@ -2,38 +2,9 @@
 <!DOCTYPE tiles-definitions PUBLIC
       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
        "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
-<tiles-definitions>	
-	<!--  ##################################################################################################-->
-	<!--  ###################################### THEME LAYOUT START #######################################-->
-	<!--  ##################################################################################################-->
-	
-
-	
+<tiles-definitions>
+	<definition name="index" template="/WEB-INF/templates/index.jsp"></definition>
 	<definition name="vehicle" template="/WEB-INF/templates/vehicle/vehicle.jsp"></definition>
 	<definition name="device" template="/WEB-INF/templates/device/device.jsp"></definition>
-
-
-	<!--<definition name="404" template="/WEB-INF/templeates/error/404.jsp"></definition>
-
-	<definition name="400" template="/WEB-INF/templeates/error/400.jsp"></definition>
-	
-	<definition name="500" template="/WEB-INF/templeates/error/500.jsp"></definition>
-	
-	<definition name="401" template="/WEB-INF/templeates/error/401.jsp"></definition>
--->
-	<!-- Layout Starts -->
-	<definition name="trackobitBaseLayout" template="/WEB-INF/templeates/layout/layout.jsp">
-		<put-attribute name="title" value="Dashboard" />
-		<put-attribute name="header" type="template" expression="/WEB-INF/templeates/${theamePath}/theame/header.jsp" />
-		<put-attribute name="aside" type="template" expression="/WEB-INF/templeates/${theamePath}/aside/aside.jsp" />
-		<put-attribute name="footer" type="template"  expression="/WEB-INF/templeates/${theamePath}/theame/footer.jsp" />
-	</definition>
-	
-	<!-- Layout Starts -->
-	<definition name="trackobitBaseMapLayout" template="/WEB-INF/templeates/layout/mapLayout.jsp">
-		<put-attribute name="title" value="Dashboard" />
-		<put-attribute name="header" type="template" expression="/WEB-INF/templeates/${theamePath}/theame/header.jsp" />
-		<put-attribute name="aside" type="template" expression="/WEB-INF/templeates/${theamePath}/aside/aside.jsp" />
- 		<put-attribute name="footer" type="template"  expression="/WEB-INF/templeates/${theamePath}/theame/footer.jsp" />
- 	</definition>
+	<definition name="map" template="/WEB-INF/templates/map/map.jsp"></definition>
 </tiles-definitions>

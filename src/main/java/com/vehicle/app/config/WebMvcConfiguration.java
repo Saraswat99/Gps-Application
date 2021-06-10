@@ -21,7 +21,9 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         log.info("Application resources source classpath:resources");
-        registry.addResourceHandler("/resources/**").addResourceLocations("/resources/").setCacheControl(CacheControl.noStore().noCache()).setCachePeriod(0);
+        registry.addResourceHandler("/resources/**").
+                addResourceLocations("/resources/").
+                setCacheControl(CacheControl.noStore().noCache()).setCachePeriod(0);
     }
 
     @Override

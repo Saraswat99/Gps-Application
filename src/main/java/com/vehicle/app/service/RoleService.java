@@ -4,5 +4,7 @@ import com.vehicle.app.entity.Role;
 
 public interface RoleService {
 
-    Role findById(Long id);
+    Role findById(String id);
+
+    Role findByName(String name);
 }

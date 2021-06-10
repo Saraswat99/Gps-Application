@@ -11,8 +11,8 @@
 <body>
 
 <%-- ################################### ADD DEVICE ######################################################## --%>
-<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#addModal">Add Device</button>
-<div class="modal fade" id="addModal" role="dialog">
+<button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#create-modal">Add Device</button>
+<div class="modal fade" id="create-modal" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -24,17 +24,18 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="imei">Device IMEI:</label>
+                        <label class="control-label col-sm-2" for="create-imei">Device IMEI:</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="imei"
+                            <input type="text" class="form-control" id="create-imei"
                                    placeholder=" Device IMEI">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="simOperator">Sim Operator:</label>
+                        <label class="control-label col-sm-2" for="create-simOperator">Sim Operator:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="simOperator" name="Sim Operator">
+                            <select class="js-example-basic-single" style="width: 100%" id="create-simOperator"
+                                    name="Sim Operator">
                                 <option value="IDEA">IDEA</option>
                                 <option value="JIO">JIO</option>
                                 <option value="AIRTEL">AIRTEL</option>
@@ -45,9 +46,10 @@
 
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="deviceType">Device Type:</label>
+                        <label class="control-label col-sm-2" for="create-deviceType">Device Type:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="deviceType" name="Device Type">
+                            <select class="js-example-basic-single" style="width: 100%" id="create-deviceType"
+                                    name="Device Type">
                                 <option value="CONCOX">CONCOX</option>
                                 <option value="COBAN">COBAN</option>
                                 <option value="GT_06">GT_06</option>
@@ -56,9 +58,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="simNumber">Sim Number:</label>
+                        <label class="control-label col-sm-2" for="create-simNumber">Sim Number:</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="simNumber" placeholder="Sim Number">
+                            <input type="text" class="form-control" id="create-simNumber" placeholder="Sim Number">
                         </div>
                     </div>
                 </form>
@@ -76,7 +78,7 @@
 
 
 <%-- ################################### UPDATE DEVICE ######################################################## --%>
-<div class="modal fade" id="updateModal" role="dialog">
+<div class="modal fade" id="update-modal" role="dialog">
     <div class="modal-dialog">
 
         <div class="modal-content">
@@ -89,23 +91,17 @@
             <div class="modal-body">
                 <form class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="deviceId">Device Id:</label>
+                        <label class="control-label col-sm-2" for="update-imei">IMEI:</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="deviceId" placeholder="Device Id">
+                            <input type="number" class="form-control" id="update-imei" placeholder="Device IMEI">
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="uimei">IMEI:</label>
+                        <label class="control-label col-sm-2" for="update-deviceType">Device Type:</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="uimei" placeholder="Device IMEI">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-sm-2" for="udeviceType">Device Type:</label>
-                        <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="udeviceType" name="Device Type">
+                            <select class="js-example-basic-single" style="width: 100%" id="update-deviceType"
+                                    name="Device Type">
                                 <option value="CONCOX">CONCOX</option>
                                 <option value="COBAN">COBAN</option>
                                 <option value="GT_06">GT_06</option>
@@ -114,9 +110,10 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="usimOperator">Sim Operator:</label>
+                        <label class="control-label col-sm-2" for="update-simOperator">Sim Operator:</label>
                         <div class="col-sm-10">
-                            <select class="js-example-basic-single" style="width: 100%" id="usimOperator" name="Sim Operator">
+                            <select class="js-example-basic-single" style="width: 100%" id="update-simOperator"
+                                    name="Sim Operator">
                                 <option value="IDEA">IDEA</option>
                                 <option value="JIO">JIO</option>
                                 <option value="AIRTEL">AIRTEL</option>
@@ -127,9 +124,9 @@
 
 
                     <div class="form-group">
-                        <label class="control-label col-sm-2" for="usimNumber">Sim Number:</label>
+                        <label class="control-label col-sm-2" for="update-simNumber">Sim Number:</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="usimNumber" placeholder="Sim Number">
+                            <input type="number" class="form-control" id="update-simNumber" placeholder="Sim Number">
                         </div>
                     </div>
 
