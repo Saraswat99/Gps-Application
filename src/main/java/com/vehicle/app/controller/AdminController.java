@@ -34,7 +34,7 @@ public class AdminController {
     }
 
     @GetMapping(value = "/listClient/{userId}")
-    public ApiResponse<UserDTO> listClient(@PathVariable Long userId) {
+    public ApiResponse<UserDTO> listClient(@PathVariable String userId) {
         return new ApiResponse<>(userService.list(userId));
     }
 
@@ -44,7 +44,7 @@ public class AdminController {
     }
 
     @DeleteMapping(value = "/deleteClient/{id}")
-    public ApiResponse<String> deleteClient(@PathVariable Long id) {
+    public ApiResponse<String> deleteClient(@PathVariable String id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
     }

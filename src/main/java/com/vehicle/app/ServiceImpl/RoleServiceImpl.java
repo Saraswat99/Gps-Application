@@ -23,11 +23,10 @@ public class RoleServiceImpl implements RoleService {
     private void init() {
         log.info("############## Role Init Start #################");
         Arrays.stream(Roles.values()).forEach((role) -> {
-            Optional<Role> optional = roleRepository.findById(role.getId());
+            Optional<Role> optional = roleRepository.findByName(role.name());
             if (!optional.isPresent()) {
                 Role role1 = new Role();
                 role1.setDefault(true);
-                role1.setId(role.getId());
                 role1.setName(role.name());
                 roleRepository.save(role1);
                 log.info("Role save {}", role.name());
@@ -38,8 +37,9 @@ public class RoleServiceImpl implements RoleService {
         log.info("############## Role Init Stop #################");
     }
 
+
     @Override
-    public Role findById(Long id) {
-        return roleRepository.findById(id).get();
+    public Role findByName(String name) {
+        return roleRepository.findByName(name).get();
     }
 }

@@ -9,6 +9,7 @@ import com.vehicle.app.utils.DateTimeUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.data.mongodb.core.query.Update;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import lombok.ToString;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DeviceDTO {
 
-    private Long id;
+    private String id;
     private String imei;
     private String simOperator;
     private String deviceType;
@@ -27,7 +28,7 @@ public class DeviceDTO {
     private String modifiedBy;
     private String added;
     private String updated;
-    private Long userId;
+    private String userId;
     private User user;
 
     public static Device convertToDevice(DeviceDTO deviceDTO) {
@@ -51,15 +52,21 @@ public class DeviceDTO {
         deviceDTO.setAssigned(device.isAssigned());
         deviceDTO.setCreatedBy(device.getCreatedBy());
         deviceDTO.setModifiedBy(device.getModifiedBy());
-        deviceDTO.setAdded(DateTimeUtils.convertToString(device.getAdded()));
-        deviceDTO.setUpdated(DateTimeUtils.convertToString(device.getUpdated()));
+//        deviceDTO.setAdded(DateTimeUtils.convertToString(device.getAdded()));
+//        deviceDTO.setUpdated(DateTimeUtils.convertToString(device.getUpdated()));
         return deviceDTO;
     }
 
-    public static void convertToExistingDevice(Device existingDevice, DeviceDTO deviceDTO) {
-        existingDevice.setImei(deviceDTO.getImei());
-        existingDevice.setSimNumber(deviceDTO.getSimNumber());
-        existingDevice.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
-        existingDevice.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
+    public static Update convertToExistingDevice(DeviceDTO deviceDTO) {
+//        existingDevice.setImei(deviceDTO.getImei());
+//        existingDevice.setSimNumber(deviceDTO.getSimNumber());
+//        existingDevice.setDeviceType(DeviceType.valueOf(deviceDTO.getDeviceType()));
+//        existingDevice.setSimOperator(SimOperator.valueOf(deviceDTO.getSimOperator()));
+        Update update=new Update();
+        update.set("imei",deviceDTO.getImei());
+        update.set("simNumber",deviceDTO.getSimNumber());
+        update.set("deviceType",DeviceType.valueOf(deviceDTO.getDeviceType()));
+        update.set("simOperator",SimOperator.valueOf(deviceDTO.getSimOperator()));
+        return update;
     }
 }

@@ -2,6 +2,7 @@ package com.vehicle.app.controller;
 
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.UserDTO;
+import com.vehicle.app.service.DeviceService;
 import com.vehicle.app.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,8 @@ public class ClientController {
 
     @Autowired
     protected UserService userService;
+    @Autowired
+    private DeviceService deviceService;
 
     @PostMapping(value = "/createTransporter")
     public ApiResponse<UserDTO> createTransporter(@RequestBody UserDTO userDTO, Authentication authentication) {
@@ -34,7 +37,7 @@ public class ClientController {
     }
 
     @GetMapping(value = "/listTransporter/{userId}")
-    public ApiResponse<UserDTO> listTransporter(@PathVariable Long userId) {
+    public ApiResponse<UserDTO> listTransporter(@PathVariable String userId) {
         return new ApiResponse<>(userService.list(userId));
     }
 
@@ -44,8 +47,16 @@ public class ClientController {
     }
 
     @DeleteMapping(value = "/deleteTransporter/{id}")
-    public ApiResponse<String> deleteTransporter(@PathVariable Long id) {
+    public ApiResponse<String> deleteTransporter(@PathVariable String id) {
         userService.delete(id);
         return new ApiResponse<>("User Deleted");
+    }
+
+//    @RequestMapping(method = RequestMethod.GET,value = "/totalDevices")
+    @GetMapping(value="/totalDevices")
+    public ApiResponse<String> getTotalDevices(Authentication authentication){
+        int totalDevices=deviceService.getTotalDevices(authentication);
+        log.info("ClientController -:"+totalDevices+"_-----------------------");
+        return new ApiResponse<>("Total Devices under clients-: "+totalDevices);
     }
 }

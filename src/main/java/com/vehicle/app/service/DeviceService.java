@@ -1,5 +1,6 @@
 package com.vehicle.app.service;
 
+import com.mongodb.client.result.UpdateResult;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.model.DeviceDTO;
 import org.springframework.security.core.Authentication;
@@ -14,7 +15,9 @@ public interface DeviceService {
 
     DeviceDTO updateDevice(DeviceDTO deviceDTO, Authentication authentication);
 
-    void deleteById(Long id, Authentication authentication);
+    void deleteById(String id, Authentication authentication);
 
-    int activeDevice(boolean active, Long deviceId, Authentication authentication);
+    UpdateResult activeDevice(boolean active, String deviceId, Authentication authentication);
+
+    int getTotalDevices(Authentication authentication);
 }

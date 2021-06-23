@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class VehicleDTO {
 
-    private Long id;
+    private String id;
     private String number;
     private double lat;
     private double lng;
@@ -29,7 +29,7 @@ public class VehicleDTO {
     private String added;
     private String updated;
     private DeviceDTO deviceDTO;
-    private Long deviceId;
+    private String deviceId;
 
     public static Vehicle convertToVehicle(VehicleDTO vehicleDTO) {
         Vehicle vehicle = new Vehicle();
@@ -52,8 +52,8 @@ public class VehicleDTO {
         vehicleDTO.setActive(vehicle.isActive());
         vehicleDTO.setLat(vehicle.getLat());
         vehicleDTO.setLng(vehicle.getLng());
-        vehicleDTO.setAdded(DateTimeUtils.convertToString(vehicle.getAdded()));
-        vehicleDTO.setUpdated(DateTimeUtils.convertToString(vehicle.getUpdated()));
+//        vehicleDTO.setAdded(DateTimeUtils.convertToString(vehicle.getAdded()));
+//        vehicleDTO.setUpdated(DateTimeUtils.convertToString(vehicle.getUpdated()));
         vehicleDTO.setDeviceDTO(DeviceDTO.convertToDTO(vehicle.getDevice()));
         return vehicleDTO;
     }

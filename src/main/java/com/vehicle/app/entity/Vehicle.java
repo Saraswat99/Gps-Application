@@ -2,35 +2,39 @@ package com.vehicle.app.entity;
 
 import com.vehicle.app.enums.VehicleStatus;
 import com.vehicle.app.enums.VehicleType;
+import io.github.kaiso.relmongo.annotation.FetchType;
+import io.github.kaiso.relmongo.annotation.JoinProperty;
+import io.github.kaiso.relmongo.annotation.ManyToOne;
+import io.github.kaiso.relmongo.annotation.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 
 @Setter
 @Getter
-@Entity
-@Table
+@Document
 public class Vehicle extends BaseEntity {
 
-    @Column(unique = true)
+    @Indexed(unique = true)
     private String number;
-    @Column
+    @Field
     private double lat;
-    @Column
+    @Field
     private double lng;
-    @Column(nullable = false, name = "active", columnDefinition = "boolean default false")
+    @Field
     private boolean active;
-    @Column
+    @Field
     private VehicleType vehicleType;
-    @Column
+    @Field
     private VehicleStatus vehicleStatus;
-    @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "device_id", nullable = true)
+    @DBRef
     private Device device;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @DBRef
     private User user;
-    @Column(nullable = false)
+    @Field
     private String level;
 }

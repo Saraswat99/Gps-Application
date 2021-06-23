@@ -9,9 +9,9 @@ import java.util.List;
 
 public interface UserService extends UserDetailsService {
 
-    void delete(Long id);
+    void delete(String id);
 
-    UserDTO list(Long userId);
+    UserDTO list(String userId);
 
     List<UserDTO> listAll(Authentication authentication);
 

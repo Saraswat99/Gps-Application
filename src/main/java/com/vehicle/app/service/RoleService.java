@@ -1,8 +1,11 @@
 package com.vehicle.app.service;
 
+
 import com.vehicle.app.entity.Role;
 
-public interface RoleService {
+import java.util.List;
+import java.util.Optional;
 
-    Role findById(Long id);
+public interface RoleService {
+    Role findByName(String name);
 }

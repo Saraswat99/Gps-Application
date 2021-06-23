@@ -2,33 +2,40 @@ package com.vehicle.app.entity;
 
 import com.vehicle.app.enums.DeviceType;
 import com.vehicle.app.enums.SimOperator;
+import io.github.kaiso.relmongo.annotation.FetchType;
+import io.github.kaiso.relmongo.annotation.JoinProperty;
+import io.github.kaiso.relmongo.annotation.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.context.annotation.Lazy;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 
-import javax.persistence.*;
 
 @ToString
 @Setter
 @Getter
-@Entity
-public class Device extends BaseEntity {
+@Document
+public class Device extends BaseEntity  {
 
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String imei;
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String simNumber;
-    @Column(nullable = false, name = "active", columnDefinition = "boolean default false")
+    @Field
     private boolean active;
-    @Column(nullable = false, name = "assigned", columnDefinition = "boolean default false")
+    @Field
     private boolean assigned;
-    @Column(nullable = false)
-    private SimOperator simOperator;
-    @Column(nullable = false)
-    private DeviceType deviceType;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private User user;
-    @Column(nullable = false)
+    @Field
     private String level;
+    @Field
+    private SimOperator simOperator;
+    @Field
+    private DeviceType deviceType;
+    @DBRef
+    private User user;
+
 }

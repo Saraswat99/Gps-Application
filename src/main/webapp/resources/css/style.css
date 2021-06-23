@@ -1,0 +1,38 @@
+.label{
+    font-weight: bold;
+    font-size: 24px;
+    color:palevioletred;
+}
+
+#heading{
+    font-weight: bolder;
+    font-style: italic;
+    color: cadetblue;
+}
+
+#list{
+    font-weight: bold;
+    color: cadetblue;
+}
+
+.text{
+    border: 2px solid black;
+}
+a:link, a:visited {
+    color: blue;
+    text-decoration: none;
+    cursor:grabbing;
+}
+a:link:active, a:visited:active {
+    color: black;
+}
+
+#map {
+    border: solid 3px palevioletred;
+    height: 600px;
+    width: 80%;
+    margin-left: 100px;
+    margin-right:100px;
+    margin-top:10px;
+    padding: 30px;
+}

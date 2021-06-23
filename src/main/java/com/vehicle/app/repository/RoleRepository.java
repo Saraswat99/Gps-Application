@@ -1,7 +1,10 @@
 package com.vehicle.app.repository;
 
 import com.vehicle.app.entity.Role;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface RoleRepository extends JpaRepository<Role, Long> {
+import java.util.Optional;
+
+public interface RoleRepository extends MongoRepository<Role, String> {
+    Optional<Role> findByName(String name);
 }

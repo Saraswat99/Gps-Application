@@ -1,5 +1,6 @@
 package com.vehicle.app.service;
 
+import com.mongodb.client.result.UpdateResult;
 import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.model.VehicleDTO;
 import org.springframework.security.core.Authentication;
@@ -8,7 +9,7 @@ import java.util.List;
 
 public interface VehicleService {
 
-    Vehicle getVehicleById(Long vehicleId,Authentication authentication);
+    Vehicle getVehicleById(String vehicleId,Authentication authentication);
 
     VehicleDTO saveVehicle(VehicleDTO vehicleDTO, Authentication authentication);
 
@@ -16,7 +17,7 @@ public interface VehicleService {
 
     VehicleDTO updateVehicle(VehicleDTO vehicleDTO, Authentication authentication);
 
-    void deleteVehicle(Long id, Authentication authentication);
+    void deleteVehicle(String id, Authentication authentication);
 
-    int activeVehicle(boolean active, Long vehicleId, Authentication authentication);
+    UpdateResult activeVehicle(boolean active, String vehicleId, Authentication authentication);
 }

@@ -5,14 +5,17 @@ import com.vehicle.app.entity.Role;
 import com.vehicle.app.entity.User;
 import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.enums.Roles;
+import com.vehicle.app.listner.UserListener;
 import com.vehicle.app.model.UserDTO;
 import com.vehicle.app.repository.DeviceRepository;
+import com.vehicle.app.repository.RoleRepository;
 import com.vehicle.app.repository.UserRepository;
 import com.vehicle.app.repository.VehicleRepository;
 import com.vehicle.app.service.RoleService;
 import com.vehicle.app.service.UserService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.MongoOperations;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -47,7 +50,7 @@ public class UserServiceImpl implements UserService {
         user.setParent(parent);
         user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         Roles roles = Roles.getChildRole(parent.getRoleAlisa());
-        Role childRole = roleService.findById(roles.getId());
+        Role childRole = roleService.findByName(roles.name());
         user.setRoles(Set.of(childRole));
         user.setRoleAlisa(roles.getAlisa());
         user = userRepository.save(user);
@@ -55,7 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO list(Long userId) {
+    public UserDTO list(String userId) {
         User user = userRepository.findById(userId).get();
         List<Vehicle> vehicles = vehicleRepository.findByUserId(userId);
         List<Device> devices = deviceRepository.findByUserId(userId);
@@ -75,9 +78,10 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO update(Authentication authentication, UserDTO userDTO) {
-        Long userId = userDTO.getId();
-        Optional.ofNullable(userId).filter(ui -> ui > 0).orElseThrow(() -> new RuntimeException("Please provide User Id"));
-        User existingUser = userRepository.findByIdAndCreatedBy(userId, authentication.getName()).orElseThrow(() -> new RuntimeException("User does not exist"));
+        String userId = userDTO.getId();
+        Optional.ofNullable(userId).filter(ui -> !ui.isEmpty()).orElseThrow(() -> new RuntimeException("Please provide User Id"));
+        User existingUser = userRepository.findByIdAndCreatedBy(userId, authentication.getName())
+                .orElseThrow(() -> new RuntimeException("User does not exist"));
         UserDTO.convertToExisitingUser(existingUser, userDTO);
         existingUser = userRepository.save(existingUser);
         return UserDTO.convertToDTO(existingUser);
@@ -88,7 +92,7 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void delete(Long id) {
+    public void delete(String id) {
         userRepository.findById(id).orElseThrow(() -> new RuntimeException("No User Found"));
         userRepository.deleteById(id);
     }

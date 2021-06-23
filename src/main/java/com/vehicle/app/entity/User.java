@@ -1,12 +1,17 @@
 package com.vehicle.app.entity;
 
-import com.vehicle.app.listner.UserListener;
+import io.github.kaiso.relmongo.annotation.*;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.annotation.TypeAlias;
+import org.springframework.data.mongodb.core.index.Indexed;
+import org.springframework.data.mongodb.core.mapping.DBRef;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -14,35 +19,34 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Entity
-@Table
-@EntityListeners(UserListener.class)
+@Data
+@Document
+@TypeAlias("UserTypeAlias")
 public class User extends BaseEntity implements UserDetails {
 
-    @Column(nullable = false)
+    @Field
     private String name;
-    @Column(nullable = false)
+    @Field
     private String roleAlisa;
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String username;
-    @Column
+    @Field
     private String password;
-    @Column(nullable = false, unique = true)
+    @Indexed(unique = true)
     private String emailId;
-    @Column
-    private boolean active;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Vehicle> vehicles;
-    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private Set<Device> devices;
-    @ManyToMany(fetch = FetchType.LAZY)
-    private Set<Role> roles;
-    @Column(nullable = false, unique = true)
+    @Field
     private String level;
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_id")
+    @Field
+    private boolean active;
+    @DBRef
+    private Set<Vehicle> vehicles;
+    @DBRef
+    private Set<Device> devices;
+    @DBRef
+    private Set<Role> roles;
+    @DBRef
     private User parent;
-    @OneToMany(mappedBy = "parent", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @DBRef
     private List<User> childs = new ArrayList<>();
 
     public String getLevel() {

@@ -1,5 +1,6 @@
 package com.vehicle.app.controller;
 
+import com.mongodb.client.result.UpdateResult;
 import com.vehicle.app.entity.Device;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.DeviceDTO;
@@ -27,6 +28,7 @@ public class DeviceController {
     @GetMapping(value = "/list")
     public ApiResponse<List<DeviceDTO>> listAllDevices(Authentication authentication) {
         List<Device> deviceList = deviceService.listAllDevices(authentication);
+        log.info("list of devices:- "+deviceList+"--------------------------------------------");
         return new ApiResponse<>(deviceList.stream().map(DeviceDTO::convertToDTO).collect(Collectors.toList()));
     }
 
@@ -42,21 +44,20 @@ public class DeviceController {
         return new ApiResponse<>(deviceService.updateDevice(deviceDTO, authentication));
     }
 
-    @RequestMapping(method = RequestMethod.DELETE, value = "/{id}")
+    @RequestMapping(method = RequestMethod.DELETE, value = "delete/{id}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> deleteDevice(@PathVariable Long id, Authentication authentication) {
+    public ApiResponse<String> deleteDevice(@PathVariable String id, Authentication authentication) {
         deviceService.deleteById(id, authentication);
         return new ApiResponse<>("Device deleted successfully");
     }
 
     @PutMapping(value = "/{active}/{deviceId}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> activeDevice(@PathVariable("active") boolean active, @PathVariable("deviceId") Long deviceId, Authentication authentication) {
-        int updateCount=deviceService.activeDevice(active, deviceId, authentication);
-        if(updateCount>0){
+    public ApiResponse<String> activeDevice(@PathVariable("active") boolean active, @PathVariable("deviceId") String deviceId, Authentication authentication) {
+        UpdateResult result=deviceService.activeDevice(active, deviceId, authentication);
+        if(result.getModifiedCount()==1) {
             return new ApiResponse<>("Device Successfully Updated");
         }
-        return new ApiResponse<>("Device did not Updated");
-
+        return new ApiResponse<>("Unsuccessfull to Update your device");
     }
 }

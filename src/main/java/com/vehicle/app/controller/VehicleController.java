@@ -1,13 +1,16 @@
 package com.vehicle.app.controller;
 
+import com.mongodb.client.result.UpdateResult;
 import com.vehicle.app.entity.Vehicle;
 import com.vehicle.app.model.ApiResponse;
 import com.vehicle.app.model.VehicleDTO;
 import com.vehicle.app.service.VehicleService;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,8 +26,8 @@ public class VehicleController {
 
     @PostMapping(value = "/create")
     @PreAuthorize("hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<VehicleDTO> createVehicle(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
-        return new ApiResponse<>(vehicleService.saveVehicle(vehicleDTO, authentication));
+    public  VehicleDTO createVehicle(@RequestBody VehicleDTO vehicleDTO, Authentication authentication) {
+        return vehicleService.saveVehicle(vehicleDTO, authentication);
     }
 
     @PutMapping(value = "/update")
@@ -40,23 +43,23 @@ public class VehicleController {
     }
 
     @GetMapping(value = "/list/{id}")
-    public ApiResponse<VehicleDTO> listVehicle(@PathVariable long id,Authentication authentication) {
+    public ApiResponse<VehicleDTO> listVehicle(@PathVariable String id,Authentication authentication) {
         Vehicle vehicle = vehicleService.getVehicleById(id,authentication);
         return new ApiResponse<>(VehicleDTO.convertToVehicleDTO(vehicle));
     }
 
     @DeleteMapping(value = "/delete/{id}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> deleteVehicle(@PathVariable Long id, Authentication authentication) {
+    public ApiResponse<String> deleteVehicle(@PathVariable String id, Authentication authentication) {
         vehicleService.deleteVehicle(id, authentication);
         return new ApiResponse<>("Vehicle successfully Deleted");
     }
 
     @PutMapping(value = "/{active}/{vehicleId}")
     @PreAuthorize("!hasRole('ROLE_TRANSPORTER')")
-    public ApiResponse<String> activeVehicle(@PathVariable("active") boolean active, @PathVariable("vehicleId") Long vehicleId, Authentication authentication) {
-        int updateCount=vehicleService.activeVehicle(active, vehicleId, authentication);
-        if(updateCount>0){
+    public ApiResponse<String> activeVehicle(@PathVariable("active") boolean active, @PathVariable("vehicleId") String vehicleId, Authentication authentication) {
+        UpdateResult updateResult=vehicleService.activeVehicle(active, vehicleId, authentication);
+        if(updateResult.getModifiedCount()==1){
             return new ApiResponse<>("Vehicle Successfully Updated");
         }
         return new ApiResponse<>("Vehicle did not Updated");
